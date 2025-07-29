@@ -19,6 +19,8 @@
     <main style="margin-top: 3rem; ">
         <?= $content ?? '' ?>
     </main>
+
+    <?php require_once 'components/footer.php'; ?>
 </body>
 
 </html>

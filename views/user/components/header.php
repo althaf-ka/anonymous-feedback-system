@@ -10,12 +10,12 @@
                 <h1 class="header-title">Feedback System</h1>
             </a>
 
-            <a href="/submit-feedback" class="btn btn-primary header-btn" onclick="submitFeedback()">Submit
-                Feedback</a>
+            <a href="/submit-feedback" class="btn btn-primary header-btn" onclick="submitFeedback()">
+                Submit Feedback
+            </a>
         </div>
     </div>
 </header>
-
 
 <style>
     .header {
@@ -36,6 +36,7 @@
         align-items: center;
         justify-content: space-between;
         height: 4rem;
+        width: 100%;
     }
 
     .header-title {
@@ -45,6 +46,7 @@
         letter-spacing: -0.015em;
         margin: 0;
         line-height: 1.2;
+        white-space: nowrap;
     }
 
     .header-logo {
@@ -52,20 +54,30 @@
         gap: 8px;
         align-items: center;
         color: var(--color-secondary);
+        text-decoration: none;
+        flex-shrink: 0;
     }
 
     .header-btn {
         font-size: 0.875rem;
         padding: 0.625rem 1.25rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+        min-width: auto;
     }
 
-    @media (max-width: 640px) {
+    /* Tablet */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 1rem;
+        }
+
         .header-content {
-            gap: 0.5rem;
+            gap: 1rem;
         }
 
         .header-title {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
         }
 
         .header-btn {
@@ -73,10 +85,53 @@
             font-size: 0.8rem;
         }
     }
-</style>
 
-<script>
-    function submitFeedback() {
-        alert("Feedback submitted!");
+    @media (max-width: 640px) {
+        .container {
+            padding: 0 0.75rem;
+        }
+
+        .header-content {
+            gap: 0.75rem;
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+        }
+
+        .header-btn {
+            padding: 0.5rem 0.875rem;
+            font-size: 0.8rem;
+        }
     }
-</script>
+
+    @media (max-width: 480px) {
+        .container {
+            padding: 0 0.5rem;
+        }
+
+        .header-content {
+            gap: 0.5rem;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+        }
+
+        .header-btn {
+            padding: 0.45rem 0.75rem;
+            font-size: 0.75rem;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .header-title {
+            font-size: 1rem;
+        }
+
+        .header-btn {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.7rem;
+        }
+    }
+</style>

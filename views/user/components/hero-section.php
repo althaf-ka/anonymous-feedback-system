@@ -222,23 +222,6 @@
         letter-spacing: 0.025em;
     }
 
-
-
-
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-
     @media (max-width: 768px) {
         .hero {
             padding: 5rem 1rem 2.5rem;
