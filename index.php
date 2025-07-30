@@ -12,6 +12,10 @@ switch ($request) {
         require_once __DIR__ . '/views/user/submit-feedback.php';
         break;
 
+    case '/public-suggestions':
+        require_once __DIR__ . '/views/user/public-suggestions.php';
+        break;
+
     case '/admin/login':
         require_once __DIR__ . '/views/admin/login.php';
         break;

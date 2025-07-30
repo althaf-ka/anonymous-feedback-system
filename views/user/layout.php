@@ -25,4 +25,6 @@
     <?php require_once 'components/footer.php'; ?>
 </body>
 
+<script src="../../assets/js/toast.js" defer></script>
+
 </html>
