@@ -5,9 +5,7 @@ ob_start();
 ?>
 
 <?php require_once 'components/hero-section.php'; ?>
-
 <?php require_once 'components/recent-public-suggestion.php'; ?>
-
 <?php require_once 'components/fulfilled-section.php'; ?>
 
 

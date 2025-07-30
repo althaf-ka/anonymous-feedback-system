@@ -8,6 +8,10 @@ switch ($request) {
         require_once __DIR__ . '/views/user/home.php';
         break;
 
+    case '/submit-feedback':
+        require_once __DIR__ . '/views/user/submit-feedback.php';
+        break;
+
     case '/admin/login':
         require_once __DIR__ . '/views/admin/login.php';
         break;

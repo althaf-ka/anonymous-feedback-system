@@ -85,30 +85,6 @@ $suggestions = [
         position: relative;
     }
 
-    .section-header {
-        text-align: center;
-        margin-bottom: 4rem;
-        opacity: 0;
-        animation: fadeInUp 0.6s ease forwards;
-    }
-
-    .section-title {
-        font-size: clamp(2rem, 4vw, 2.5rem);
-        font-weight: 800;
-        color: var(--color-text);
-        margin-bottom: 0.75rem;
-        letter-spacing: -0.02em;
-        line-height: 1.2;
-    }
-
-    .section-subtitle {
-        font-size: 1.125rem;
-        color: var(--color-text-muted);
-        max-width: 500px;
-        margin: 0 auto;
-        line-height: 1.6;
-    }
-
     .suggestions-wrapper {
         position: relative;
         opacity: 0;

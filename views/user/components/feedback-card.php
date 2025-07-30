@@ -193,6 +193,8 @@ function renderFeedbackCard($data)
     }
 
     .feedback-preview {
+        text-overflow: ellipsis;
+        line-clamp: 2;
         font-size: 0.9rem;
         color: var(--color-text-secondary, #475569);
         line-height: 1.5;
@@ -427,6 +429,8 @@ function renderFeedbackCard($data)
         }
 
         .feedback-preview {
+            text-overflow: ellipsis;
+            line-clamp: 3;
             -webkit-line-clamp: 3;
         }
 
