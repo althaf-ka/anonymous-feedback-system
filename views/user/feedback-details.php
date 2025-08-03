@@ -175,45 +175,6 @@ function copyLink() {
         showToast('Link copied!', 'success');
     }
 }
-
-function showToast(message, type = 'info') {
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    
-    const colors = {
-        success: '#10B981',
-        info: '#3B82F6',
-        error: '#EF4444'
-    };
-    
-    Object.assign(toast.style, {
-        position: 'fixed',
-        top: '2rem',
-        right: '2rem',
-        padding: '0.75rem 1rem',
-        borderRadius: '8px',
-        background: colors[type],
-        color: 'white',
-        fontWeight: '600',
-        fontSize: '0.85rem',
-        zIndex: '9999',
-        transform: 'translateX(100%)',
-        transition: 'transform 0.3s ease',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-    });
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => toast.style.transform = 'translateX(0)', 100);
-    setTimeout(() => {
-        toast.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-            if (document.body.contains(toast)) {
-                document.body.removeChild(toast);
-            }
-        }, 300);
-    }, 2500);
-}
 </script>
 
 <?php

@@ -16,7 +16,10 @@
 </head>
 
 <body>
-    <?php require_once 'components/header.php'; ?>
+    <?php
+    $title = 'Feedback System';
+    $isAdmin = false;
+    require_once __DIR__ . '../../global/header.php' ?>
 
     <main style="margin-top: 3rem; ">
         <?= $content ?? '' ?>
@@ -25,6 +28,6 @@
     <?php require_once 'components/footer.php'; ?>
 </body>
 
-<script src="/assets/css/global.css" defer></script>
+<script src="/assets/js/toast.js" defer></script>
 
 </html>

@@ -7,12 +7,16 @@
                         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
                     </svg>
                 </div>
-                <h1 class="header-title">Feedback System</h1>
+                <h1 class="header-title"><?= $title ?? 'Feedback System' ?></h1>
             </a>
 
-            <a href="/submit-feedback" class="btn btn-primary header-btn" onclick="submitFeedback()">
-                Submit Feedback
-            </a>
+            <div class="header-actions">
+                <?php if (!empty($isAdmin)): ?>
+                    <a href="/logout" class="btn btn-primary header-btn">Logout</a>
+                <?php else: ?>
+                    <a href="/submit-feedback" class="btn btn-primary header-btn">Submit Feedback</a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </header>
