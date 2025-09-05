@@ -1,31 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+ob_start();
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? 'Feedback Website' ?></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/global.css">
+$title       = htmlspecialchars($title ?? 'Admin');
+$isAdmin     = true;
+$showSidebar = $showSidebar ?? true;
+$showHeader  = $showHeader ?? true;
 
-    <?= $additionalHead ?? '' ?>
-</head>
+if ($showHeader) {
+    require __DIR__ . '/../global/header.php';
+}
 
-<body>
-    <?php
-    $title = 'Admin';
-    $isAdmin = true;
-    require_once __DIR__ . '../../global/header.php' ?>
+if ($showSidebar) {
+    require __DIR__ . '/components/sidebar.php';
+}
+?>
 
-    <main style="margin-top: 3rem; ">
-        <?= $content ?? '' ?>
-    </main>
-</body>
+<main style="<?= $showHeader ? 'margin-top:3rem;' : '' ?>">
+    <?= $content ?? '' ?>
+</main>
 
-<script src="/assets/css/global.css" defer></script>
-
-</html>
+<?php
+$body = ob_get_clean();
+require __DIR__ . '/../global/base-layout.php';

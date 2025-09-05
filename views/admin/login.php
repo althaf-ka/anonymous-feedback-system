@@ -1,6 +1,10 @@
 <?php
+
 $title = "Login | Admin Panel";
 $additionalHead = '<link rel="stylesheet" href="../assets/css/pages/login.css">';
+$showSidebar = false;
+$showHeader  = false;
+
 ob_start();
 ?>
 
@@ -39,4 +43,3 @@ ob_start();
 <?php
 $content = ob_get_clean();
 include __DIR__ . '/layout.php';
-?>

@@ -29,7 +29,7 @@
         right: 0;
         background-color: rgba(255, 255, 255, 0.90);
         border-bottom: 1px solid var(--color-border);
-        z-index: 50;
+        z-index: 100;
         box-shadow: var(--shadow-sm);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);

@@ -1,3 +1,7 @@
+# Root .htaccess (at project root)
 RewriteEngine On
+
+# Send all requests to the public folder unless the file exists
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)＄ index.php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ public/index.php [L]
