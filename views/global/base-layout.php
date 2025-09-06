@@ -12,7 +12,9 @@
         rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/global.css">
 
-    <?= $additionalHead ?? '' ?>
+    <?php foreach ($headAssets ?? [] as $asset): ?>
+        <?= $asset . PHP_EOL ?>
+    <?php endforeach; ?>
 </head>
 
 <body>

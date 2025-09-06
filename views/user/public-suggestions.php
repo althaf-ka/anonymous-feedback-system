@@ -1,6 +1,8 @@
 <?php
 $title = "Public Suggestions | Feedback System";
-$additionalHead = '<link rel="stylesheet" href="../../assets/css/pages/public-suggestions.css">';
+$headAssets = [
+    '<link rel="stylesheet" href="../../assets/css/pages/public-suggestions.css">'
+];
 
 ob_start();
 ?>
@@ -18,7 +20,6 @@ ob_start();
     </div>
 </section>
 
-<!-- Filters and Search Section -->
 <section class="suggestions-filters">
     <div class="container">
         <div class="filters-container">
@@ -172,7 +173,7 @@ include __DIR__ . '/layout.php';
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
         const categoryFilter = document.getElementById('categoryFilter');
         const statusFilter = document.getElementById('statusFilter');
@@ -190,7 +191,7 @@ include __DIR__ . '/layout.php';
         sortFilter.addEventListener('change', filterSuggestions);
 
         // Load more functionality
-        loadMoreBtn.addEventListener('click', function () {
+        loadMoreBtn.addEventListener('click', function() {
             this.innerHTML = '<span>Loading...</span>';
 
             // Simulate loading more content
@@ -274,5 +275,4 @@ include __DIR__ . '/layout.php';
 
 
     });
-
 </script>

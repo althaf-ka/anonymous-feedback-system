@@ -1,10 +1,12 @@
 <?php
 ob_start();
 
+
 $title       = htmlspecialchars($title ?? 'Admin');
 $isAdmin     = true;
-$showSidebar = $showSidebar ?? true;
-$showHeader  = $showHeader ?? true;
+$headAssets[] = '<link rel="stylesheet" href="/assets/css/sidebar.css">';
+
+
 
 if ($showHeader) {
     require __DIR__ . '/../global/header.php';

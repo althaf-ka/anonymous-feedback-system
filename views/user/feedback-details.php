@@ -1,6 +1,8 @@
 <?php
 $title = "Extended Library Hours During Exams | Feedback System";
-$additionalHead = '<link rel="stylesheet" href="/assets/css/pages/feedback-details.css">';
+$headAssets = [
+    '<link rel="stylesheet" href="/assets/css/pages/feedback-details.css">'
+];
 
 ob_start();
 ?>
@@ -18,8 +20,8 @@ ob_start();
             </span>
             <span class="meta-item rounded-sm">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 6v6l4 2"/>
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v6l4 2" />
                 </svg>
                 2 days ago
             </span>
@@ -40,9 +42,9 @@ ob_start();
                     <div class="card-content">
                         <div class="description-text">
                             <p>The library should stay open 24/7 during exam periods to accommodate different study schedules and reduce overcrowding during peak hours. Many students prefer studying late at night or early in the morning, and the current limited hours create unnecessary stress during already challenging exam periods.</p>
-                            
+
                             <p>This would particularly benefit students with different sleep schedules, international students adjusting to time zones, students with part-time jobs who can only study at night, and those who find the library less crowded during off-peak hours.</p>
-                            
+
                             <p>The implementation could include additional security measures and maybe a reduced staff presence during overnight hours, but keeping the main study areas accessible would make a significant difference to student success.</p>
                         </div>
                     </div>
@@ -53,7 +55,7 @@ ob_start();
                     <div class="card-header">
                         <div class="official-badge">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                             </svg>
                             Official Response
                         </div>
@@ -73,10 +75,10 @@ ob_start();
                         <?php
                         // Sample data - replace with your actual data
                         $feedback_status = 'New'; // or 'Under Review', 'New', etc.
-$vote_count = 45;
-$feedback_id = 123;
-?>
-                        
+                        $vote_count = 45;
+                        $feedback_id = 123;
+                        ?>
+
                         <?php if ($feedback_status === 'Resolved'): ?>
                             <div class="vote-display">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -118,13 +120,13 @@ $feedback_id = 123;
                             <span class="detail-value">Dec 28, 2024</span>
                         </div>
                     </div>
-                    
+
                     <!-- Compact Copy Button -->
                     <div class="actions-section">
                         <button class="btn btn-primary copy-button" onclick="copyLink()">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                             </svg>
                             Share Feedback
                         </button>
@@ -137,44 +139,44 @@ $feedback_id = 123;
 
 
 <script>
-function handleVote(button, feedbackId) {
-    const voteCount = button.querySelector('.vote-count');
-    let currentVotes = parseInt(voteCount.textContent);
-    let isVoted = button.classList.contains('voted');
-    
-    if (isVoted) {
-        currentVotes--;
-        button.classList.remove('voted');
-        showToast('Vote removed', 'info');
-    } else {
-        currentVotes++;
-        button.classList.add('voted');
-        showToast('Vote added!', 'success');
-    }
-    
-    voteCount.textContent = currentVotes;
-    
-    // Here you would make an AJAX call to update the vote in your database
-    // updateVoteInDatabase(feedbackId, isVoted ? 'remove' : 'add');
-}
+    function handleVote(button, feedbackId) {
+        const voteCount = button.querySelector('.vote-count');
+        let currentVotes = parseInt(voteCount.textContent);
+        let isVoted = button.classList.contains('voted');
 
-function copyLink() {
-    const url = window.location.href;
-    
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => {
-            showToast('Link copied!', 'success');
-        });
-    } else {
-        const tempInput = document.createElement('input');
-        tempInput.value = url;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-        showToast('Link copied!', 'success');
+        if (isVoted) {
+            currentVotes--;
+            button.classList.remove('voted');
+            showToast('Vote removed', 'info');
+        } else {
+            currentVotes++;
+            button.classList.add('voted');
+            showToast('Vote added!', 'success');
+        }
+
+        voteCount.textContent = currentVotes;
+
+        // Here you would make an AJAX call to update the vote in your database
+        // updateVoteInDatabase(feedbackId, isVoted ? 'remove' : 'add');
     }
-}
+
+    function copyLink() {
+        const url = window.location.href;
+
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied!', 'success');
+            });
+        } else {
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('Link copied!', 'success');
+        }
+    }
 </script>
 
 <?php

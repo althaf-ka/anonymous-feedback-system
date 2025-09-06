@@ -1,9 +1,11 @@
 <?php
 
 $title = "Login | Admin Panel";
-$additionalHead = '<link rel="stylesheet" href="../assets/css/pages/login.css">';
-$showSidebar = false;
-$showHeader  = false;
+$headAssets = [
+    '<link rel="stylesheet" href="/assets/css/pages/login.css">'
+];
+// $showSidebar = false;
+// $showHeader  = false;
 
 ob_start();
 ?>

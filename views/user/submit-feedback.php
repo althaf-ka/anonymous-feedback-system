@@ -1,6 +1,8 @@
 <?php
 $title = "Submit Feedback | Feedback System";
-$additionalHead = '<link rel="stylesheet" href="assets/css/pages/submit-feedback.css">';
+$headAssets = [
+    '<link rel="stylesheet" href="assets/css/pages/submit-feedback.css">'
+];
 
 ob_start();
 ?>
@@ -204,7 +206,7 @@ include __DIR__ . '/layout.php';
 ?>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('feedbackForm');
         const titleInput = document.getElementById('title');
         const messageInput = document.getElementById('message');
@@ -236,7 +238,7 @@ include __DIR__ . '/layout.php';
         updateCounter(messageInput, messageCounter, 600);
 
         // Enhanced form submission
-        form.addEventListener('submit', function (event) {
+        form.addEventListener('submit', function(event) {
             event.preventDefault();
 
             // Enhanced validation
@@ -273,5 +275,4 @@ include __DIR__ . '/layout.php';
             }
         });
     });
-
 </script>
