@@ -4,8 +4,6 @@ $title = "Login | Admin Panel";
 $headAssets = [
     '<link rel="stylesheet" href="/assets/css/pages/login.css">'
 ];
-// $showSidebar = false;
-// $showHeader  = false;
 
 ob_start();
 ?>

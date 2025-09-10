@@ -39,15 +39,13 @@ body {
   padding: 0 1rem;
 }
 
-
-
 @media (min-width: 640px) {
   .container {
     padding: 0 1.5rem;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .container {
     padding: 0 2rem;
   }
@@ -253,5 +251,17 @@ a {
   .form-textarea,
   .form-select .feedback-form {
     font-size: 0.82rem;
+  }
+}
+
+/* Admin Page Sidebar Wrapper */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+}
+
+@media (max-width: 768px) {
+  .admin-layout {
+    display: block;
   }
 }

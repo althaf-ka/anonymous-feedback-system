@@ -1,5 +1,5 @@
   .sidebar {
-      position: fixed;
+      position: sticky;
       top: 0;
       left: 0;
       height: 100vh;
@@ -37,8 +37,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      min-height: 60px;
+      height: 4rem;
       flex-shrink: 0;
+      box-sizing: border-box;
   }
 
   .sidebar-brand {
@@ -198,7 +199,6 @@
   @media (min-width: 768px) {
       .sidebar {
           transform: translateX(0);
-
       }
 
       .sidebar-toggle {
@@ -234,6 +234,7 @@
       .sidebar {
           width: 85vw;
           max-width: 320px;
+          position: fixed;
       }
 
       .sidebar-header {

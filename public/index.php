@@ -21,5 +21,7 @@ $router->get('/feedback/{id}', 'FeedbackController@show');
 
 //Admin Routes
 $router->get('/admin/login', 'AdminController@login');
+$router->get('/admin/dashboard', 'AdminController@dashboard');
+
 
 $router->resolve();

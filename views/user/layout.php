@@ -2,6 +2,8 @@
 ob_start();
 
 $title = $title ?? 'Feedback System';
+$headerTitle  = "Feedback System";
+
 $isAdmin = false;
 
 require __DIR__ . '/../global/header.php';

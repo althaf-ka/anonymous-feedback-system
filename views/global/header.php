@@ -14,7 +14,7 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
                     </svg>
-                    <h1 class="header-title"><?= $title ?? 'Feedback System' ?></h1>
+                    <h1 class="header-title"><?= $headerTitle ?? 'Feedback System' ?></h1>
                 </a>
             </div>
 
@@ -43,6 +43,7 @@
         box-shadow: var(--shadow-sm);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
+        box-sizing: border-box;
     }
 
     .header-content {
@@ -107,9 +108,9 @@
         background-color: var(--color-surface-active, rgba(0, 0, 0, 0.1));
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 769px) {
         .header {
-            z-index: 100;
+            display: none;
         }
 
         .hamburger {
