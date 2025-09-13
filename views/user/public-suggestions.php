@@ -22,56 +22,35 @@ ob_start();
 
 <section class="suggestions-filters">
     <div class="container">
-        <div class="filters-container">
-            <div class="search-section">
-                <div class="search-wrapper">
-                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="M21 21l-4.35-4.35" />
-                    </svg>
-                    <input type="text" id="searchInput" class="search-input rounded-sm"
-                        placeholder="Search suggestions...">
-                </div>
-            </div>
-
-            <div class="filter-section">
-                <div class="filter-group">
-                    <label class="filter-label" for="categoryFilter">Category</label>
-                    <select id="categoryFilter" class="filter-select rounded-sm">
-                        <option value="">All Categories</option>
-                        <option value="academics">Academics</option>
-                        <option value="facilities">Facilities</option>
-                        <option value="food">Food Services</option>
-                        <option value="mental-health">Mental Health</option>
-                        <option value="general">General</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label" for="statusFilter">Status</label>
-                    <select id="statusFilter" class="filter-select rounded-sm">
-                        <option value="">All Status</option>
-                        <option value="New">New</option>
-                        <option value="Under Review">Under Review</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Resolved">Resolved</option>
-                        <option value="Completed">Completed</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label" for="sortFilter">Sort By</label>
-                    <select id="sortFilter" class="filter-select rounded-sm">
-                        <option value="votes">Most Votes</option>
-                        <option value="recent">Most Recent</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="title">Title A-Z</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+        <?php
+        $cfg = [
+            'searchPH' => 'Search feedback…',
+            'selects'  => [
+                ['id' => 'status', 'label' => 'Status', 'options' => [
+                    '' => 'All',
+                    'new' => 'New',
+                    'review' => 'Review',
+                    'progress' => 'In Progress',
+                    'resolved' => 'Resolved'
+                ]],
+                ['id' => 'category', 'label' => 'Category', 'options' => [
+                    '' => 'All',
+                    'academics' => 'Academics',
+                    'facilities' => 'Facilities',
+                    'food' => 'Food Services',
+                    'mental-health' => 'Mental Health',
+                    'general' => 'General'
+                ]],
+                ['id' => 'sort', 'label' => 'Sort By', 'options' => [
+                    'votes' => 'Most Votes',
+                    'recent' => 'Most Recent',
+                    'oldest' => 'Oldest First',
+                    'title' => 'Title A-Z'
+                ]],
+            ],
+        ];
+        include __DIR__ . '/../global/filters-section.php';
+        ?>
     </div>
 </section>
 

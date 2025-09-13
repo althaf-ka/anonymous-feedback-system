@@ -1,4 +1,4 @@
-<header class="header">
+<header class="header <?php echo !empty($isAdmin) ? 'header-admin' : ''; ?>">
     <div class="container">
         <div class="header-content">
             <div class="header-left">
@@ -109,7 +109,7 @@
     }
 
     @media (min-width: 769px) {
-        .header {
+        .header.header-admin {
             display: none;
         }
 

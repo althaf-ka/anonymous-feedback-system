@@ -8,6 +8,7 @@
   --color-text-muted: #6B7280;
   --color-error: #F87171;
   --color-border: #E5E7EB;
+  --color-bg-hover: #F3F4F5;
 
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -264,4 +265,11 @@ a {
   .admin-layout {
     display: block;
   }
+}
+
+.admin-page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
 }

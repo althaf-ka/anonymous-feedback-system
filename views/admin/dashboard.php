@@ -11,7 +11,7 @@ ob_start();
 
 <div class="">
     <header class="dashboard-header">
-        <h1 class="page-title">Dashboard</h1>
+        <h1 class="admin-page-title">Dashboard</h1>
     </header>
 
     <section class="metrics-section">

@@ -18,7 +18,7 @@
     <nav class="sidebar-nav">
         <ul class="nav-list">
             <li class="nav-item">
-                <a href="/admin/dashboard" class="nav-link active">
+                <a href="/admin/dashboard" class="nav-link">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7" />
                         <rect x="14" y="3" width="7" height="7" />
@@ -35,7 +35,6 @@
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                     </svg>
                     <span class="nav-text">Feedback</span>
-                    <span class="nav-badge">5</span>
                 </a>
             </li>
 
@@ -113,6 +112,19 @@
     document.addEventListener('DOMContentLoaded', () => {
         const overlay = document.getElementById('sidebarOverlay');
         const sidebar = document.getElementById('sidebar');
+
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentPath = window.location.pathname;
+
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+
 
         if (overlay) {
             overlay.addEventListener('click', toggleSidebar);
