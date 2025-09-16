@@ -42,6 +42,14 @@ document.addEventListener("click", (e) => {
 
     dropdown.classList.remove("open");
 
+    // It is for the view feedback page to change the Status at header onChange
+    const headerStatus = document.querySelector(".feedback-header .meta-item.status-element");
+    if (headerStatus) {
+      headerStatus.textContent = option.textContent;
+      headerStatus.className = `rounded-sm status-${value} meta-item status-element`;
+    }
+
+
     fetch(`/admin/feedback/update-status.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,5 +64,115 @@ document.addEventListener("click", (e) => {
     );
   }
 });
+
+
+//     FeedbackComponent.php
+
+document.querySelectorAll('.visibility-toggle').forEach(toggle => {
+  toggle.addEventListener('change', async function() {
+
+    const statusSpan = this.closest('.visibility-control').querySelector('.visibility-status');
+    const isPublic = this.checked;
+    
+    statusSpan.textContent = isPublic ? 'Public' : 'Private';
+    
+    statusSpan.style.opacity = '0.5';
+    
+    try {
+      // Send update to server
+      await fetch('/admin/feedback/set-visibility', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: this.dataset.id,
+          isPublic: isPublic
+        })
+      });
+      
+
+      statusSpan.style.opacity = '1';
+      
+    } catch (error) {
+      this.checked = !isPublic;
+      statusSpan.textContent = !isPublic ? 'Public' : 'Private';
+      statusSpan.style.opacity = '1';
+      console.error('Failed to update visibility:', error);
+    }
+  });
+});
+
+// Toggling the Official Response Element 
+function toggleResponseForm(showForm) {
+  const view = document.getElementById("official-response-view");
+  const form = document.getElementById("official-response-form");
+  if (showForm) {
+    view.style.display = "none";
+    form.style.display = "block";
+  } else {
+    view.style.display = "block";
+    form.style.display = "none";
+  }
+}
+
+function handleResponseSave(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const content = form.querySelector("textarea").value.trim();
+
+  // TODO: Replace this with a real AJAX request
+  // Example: fetch("/admin/feedback/save-response.php", { ... })
+
+  updateResponseUI(content, new Date());
+}
+
+function updateResponseUI(content, date) {
+  const view = document.getElementById("official-response-view");
+  const form = document.getElementById("official-response-form");
+
+  const d = date ? new Date(date) : null;
+  const formattedDate = d && !isNaN(d)
+    ? d.toLocaleString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      })
+    : "";
+
+  view.innerHTML = content
+    ? `<p>${escapeHtml(content).replace(/\n/g, "<br>")}</p>
+       <button class="btn btn-sm btn-warning" onclick="toggleResponseForm(true)">Edit Response</button>`
+    : `<p class="no-response">No official response has been added yet.</p>
+       <button class="btn btn-sm btn-primary" onclick="toggleResponseForm(true)">Add Response</button>`;
+
+  view.style.display = "block";
+  form.style.display = "none";
+
+  // 🔹 Update the header date
+  const headerDate = document.querySelector(".card-header .response-date");
+  if (headerDate) {
+    headerDate.textContent = formattedDate;
+  } else if (formattedDate) {
+    const header = document.querySelector(".card-header");
+    if (header) {
+      const span = document.createElement("span");
+      span.className = "response-date";
+      span.textContent = formattedDate;
+      header.appendChild(span);
+    }
+  }
+}
+
+function escapeHtml(str = "") {
+  return str.replace(/[&<>"']/g, tag =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[tag])
+  );
+}
+
 
 

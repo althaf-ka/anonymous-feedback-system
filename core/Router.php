@@ -35,7 +35,7 @@ class Router
 
     private function match($pattern, $uri)
     {
-        $pattern = preg_replace('/\{([^}]+)\}/', '([^/]+)', $pattern);
+        $pattern = preg_replace('/\{([^}]+)\}/', '([^/]+)', $pattern); //For getting id from routes {variable}
         $pattern = str_replace('/', '\/', $pattern);
         $pattern = '/^' . $pattern . '$/';
 

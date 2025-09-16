@@ -17,11 +17,12 @@ $router = new Router();
 $router->get('/', 'UserController@home');
 $router->get('/submit-feedback', 'UserController@submitFeedback');
 $router->get('/public-suggestions', 'UserController@publicSuggestions');
-$router->get('/feedback/{id}', 'FeedbackController@show');
+$router->get('/feedback/{id}', 'UserController@viewFeedback');
 
 //Admin Routes
 $router->get('/admin/login', 'AdminController@login');
 $router->get('/admin/dashboard', 'AdminController@dashboard');
 $router->get('/admin/feedback', 'AdminController@feedback');
+$router->get('/admin/feedback/{id}', 'AdminController@viewFeedback');
 
 $router->resolve();
