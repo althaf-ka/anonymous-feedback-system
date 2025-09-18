@@ -57,16 +57,6 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a href="/admin/analytics" class="nav-link">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 3v18h18" />
-                        <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
-                    </svg>
-                    <span class="nav-text">Analytics</span>
-                </a>
-            </li>
-
             <!-- <li class="nav-item">
                 <a href="/admin/settings" class="nav-link">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -80,12 +70,12 @@
     </nav>
 
     <div class="sidebar-footer">
-        <div class="user-profile rounded-sm">
+        <!-- <div class="user-profile rounded-sm">
             <div class="user-info">
                 <span class="user-name">Admin User</span>
                 <span class="user-role">Administrator</span>
             </div>
-        </div>
+        </div> -->
         <a href="/logout" class="logout-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

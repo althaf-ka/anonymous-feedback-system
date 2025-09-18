@@ -176,3 +176,25 @@ function escapeHtml(str = "") {
 
 
 
+/// Model Contols // model.php
+function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+}
+
+// Attach close buttons
+document.addEventListener("click", function (e) {
+    if (e.target.matches("[data-close-modal]")) {
+        closeModal(e.target.getAttribute("data-close-modal"));
+    }
+    if (e.target.classList.contains("modal-overlay")) {
+        closeModal(e.target.id);
+    }
+});
+
+
+
+

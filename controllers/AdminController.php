@@ -19,4 +19,8 @@ class AdminController {
       $feedbackId = $id;
       require __DIR__ . "/../views/admin/view-feedback.php";
     }
+
+    public function viewCategories():void{
+      require __DIR__ . "/../views/admin/view-categories.php";
+    }
 }
