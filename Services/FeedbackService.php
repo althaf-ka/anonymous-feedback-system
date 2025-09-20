@@ -1,7 +1,8 @@
 <?php
-namespace services;
 
-use models\Feedback;
+namespace Services;
+
+use Models\Feedback;
 
 class FeedbackService
 {

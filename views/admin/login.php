@@ -8,13 +8,13 @@ $headAssets = [
 ob_start();
 ?>
 
-<div class="login-wrapper container">
+<div class="login-wrapper">
     <div class="login-container rounded-sm">
         <div class="login-header">
             <h1 class="login-title">Admin Login</h1>
         </div>
 
-        <form method="POST" action="/controllers/auth/login.php" class="login-form">
+        <form method="POST" class="login-form">
             <div class="form-fields-login">
                 <div class="form-group">
                     <label for="email" class="form-label">
@@ -39,6 +39,42 @@ ob_start();
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector(".login-form");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch("/admin/login", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(result.message, "success");
+
+                    setTimeout(() => {
+                        window.location.href = result.data.redirect;
+                    }, 800);
+                } else {
+                    showToast(result.message, "error");
+                }
+            } catch (err) {
+                showToast("An unexpected error occurred. Try again.", "error");
+            }
+        });
+    });
+</script>
 
 <?php
 $content = ob_get_clean();

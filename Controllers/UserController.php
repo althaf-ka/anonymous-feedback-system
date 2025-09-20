@@ -1,6 +1,6 @@
 <?php
 
-namespace controllers;
+namespace Controllers;
 
 class UserController
 {
@@ -18,8 +18,9 @@ class UserController
     {
         require __DIR__ . '/../views/user/public-suggestions.php';
     }
-    public function viewFeedback(string $id): void {
-      $feedbackId = $id;
-      require __DIR__ . "/../views/user/view-feedback.php";
+    public function viewFeedback(string $id): void
+    {
+        $feedbackId = $id;
+        require __DIR__ . "/../views/user/view-feedback.php";
     }
 }
