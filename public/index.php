@@ -34,7 +34,8 @@ $router->use(AuthMiddleware::class);
 
 //User Routes
 $router->get('/', 'UserController@home');
-$router->get('/submit-feedback', 'UserController@submitFeedback');
+$router->get('/submit-feedback', 'UserController@showSubmitFeedback');
+$router->post('/submit-feedback', 'FeedbackController@handleSubmitFeedback');
 $router->get('/public-suggestions', 'UserController@publicSuggestions');
 $router->get('/feedback/{id}', 'UserController@viewFeedback');
 

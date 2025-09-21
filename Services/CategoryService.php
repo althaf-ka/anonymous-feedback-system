@@ -32,4 +32,9 @@ class CategoryService
             throw new Exception("Unable to create category at this time. Please try again later.");
         }
     }
+
+    public function getCategoriesForFeedback(): array
+    {
+        return $this->categoryRepo->findAll(['id', 'name']);
+    }
 }

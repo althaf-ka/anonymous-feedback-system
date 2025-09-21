@@ -23,6 +23,7 @@ class ErrorHandler
         self::log($e->getMessage(), $e->getFile(), $e->getLine());
         $status = $e->getCode() ?: 500;
         $message = $e->getMessage() ?: "An unexpected error occurred. Please try again later.";
+        // error_log(print_r($e, true));
         Response::error($message, [], $status);
     }
 

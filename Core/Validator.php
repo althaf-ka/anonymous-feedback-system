@@ -29,4 +29,24 @@ class Validator
             ], 422);
         }
     }
+
+    public static function string(string $field, array $data, int $min, ?int $max = null): void
+    {
+        $value = $data[$field] ?? '';
+        if (!is_string($value)) {
+            Response::error("Validation failed", [
+                $field => "Must be a string"
+            ], 422);
+        }
+        if (strlen($value) < $min) {
+            Response::error("Validation failed", [
+                $field => "Must be at least $min characters"
+            ], 422);
+        }
+        if ($max !== null && strlen($value) > $max) {
+            Response::error("Validation failed", [
+                $field => "Must be no more than $max characters"
+            ], 422);
+        }
+    }
 }

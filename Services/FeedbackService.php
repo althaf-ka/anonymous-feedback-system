@@ -2,18 +2,26 @@
 
 namespace Services;
 
-use Models\Feedback;
+use Exception;
+use Repositories\FeedbackRepository;
 
 class FeedbackService
 {
-    public static function find($id)
+    private FeedbackRepository $feedbackRepo;
+
+    public function __construct(FeedbackRepository $feedbackRepo)
     {
-        global $pdo;
+        $this->feedbackRepo = $feedbackRepo;
+    }
 
-        $stmt = $pdo->prepare("SELECT * FROM feedback WHERE id = ?");
-        $stmt->execute([$id]);
-        $data = $stmt->fetch();
+    public function submitFeedback(array $data): bool
+    {
+        $response = $this->feedbackRepo->insert($data);
 
-        return $data ? new Feedback($data) : null;
+        if (!$response) {
+            throw new Exception("Feedback submission failed. Please try again later.");
+        }
+
+        return $response;
     }
 }

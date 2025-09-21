@@ -23,7 +23,7 @@ ob_start();
 <section class="feedback-form-section">
     <div class="container">
         <div class="form-container">
-            <form class="feedback-form" id="feedbackForm" method="POST" action="/submit-feedback">
+            <form class="feedback-form" id="feedbackForm" method="POST">
                 <div class="form-grid">
                     <!-- Left Column -->
                     <div class="form-column">
@@ -62,8 +62,8 @@ ob_start();
                                 <span class="label-text">Contact Details</span>
                                 <span class="label-optional">Optional</span>
                             </label>
-                            <input type="email" id="contact" name="contact" class="form-input"
-                                placeholder="your.email@gmail.com">
+                            <input type="text" id="contact" name="contact" class="form-input"
+                                placeholder="Email or number">
                             <div class="form-help">
                                 <span class="help-text">Only if you want a response. Your feedback remains
                                     anonymous.</span>
@@ -82,12 +82,13 @@ ob_start();
                             <div class="select-wrapper">
                                 <select id="category" name="category" class="form-select" required>
                                     <option value="">Select a category</option>
-                                    <option value="academics">Academics</option>
-                                    <option value="facilities">Facilities</option>
-                                    <option value="food">Food Services</option>
-                                    <option value="mental-health">Mental Health</option>
-                                    <option value="general">General</option>
+                                    <?php foreach ($categories as $cat): ?>
+                                        <option value="<?= htmlspecialchars($cat['id']) ?>">
+                                            <?= htmlspecialchars($cat['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
+
                                 <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2">
                                     <path d="M6 9l6 6 6-6" />
@@ -210,68 +211,68 @@ include __DIR__ . '/layout.php';
         const form = document.getElementById('feedbackForm');
         const titleInput = document.getElementById('title');
         const messageInput = document.getElementById('message');
+        const categorySelect = document.getElementById('category');
         const titleCounter = document.getElementById('titleCounter');
         const messageCounter = document.getElementById('messageCounter');
 
-        // Enhanced character counter with smooth animations
-        function updateCounter(input, counter, maxLength) {
+        const updateCounter = (input, counter, maxLength) => {
             const length = input.value.length;
             counter.textContent = `${length}/${maxLength}`;
-
-            // Enhanced color coding
             counter.classList.remove('warning', 'danger');
             const percentage = length / maxLength;
+            if (percentage >= 0.9) counter.classList.add('danger');
+            else if (percentage >= 0.7) counter.classList.add('warning');
+        };
 
-            if (percentage >= 0.9) {
-                counter.classList.add('danger');
-            } else if (percentage >= 0.7) {
-                counter.classList.add('warning');
-            }
-        }
-
-        // Set up character counters
         titleInput.addEventListener('input', () => updateCounter(titleInput, titleCounter, 80));
         messageInput.addEventListener('input', () => updateCounter(messageInput, messageCounter, 600));
-
-        // Initialize counters
         updateCounter(titleInput, titleCounter, 80);
         updateCounter(messageInput, messageCounter, 600);
 
-        // Enhanced form submission
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            // Enhanced validation
-            let isValid = true;
-            const requiredFields = [titleInput, messageInput, document.getElementById('category')];
+            let isValid = [titleInput, messageInput, categorySelect].every(f => f.value.trim() !== '');
+            if (!isValid) {
+                showToast('Please fill in all required fields.', 'error');
+                return;
+            }
 
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.style.borderColor = 'var(--color-error, #EF4444)';
-                    isValid = false;
-                } else {
-                    field.style.borderColor = 'var(--color-border)';
-                }
-            });
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<span class="loading-spinner"></span> Submitting...`;
+            submitBtn.disabled = true;
 
-            if (isValid) {
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalContent = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<span>Submitting...</span>';
-                submitBtn.disabled = true;
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('/submit-feedback', {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
 
+                const result = await response.json();
 
-                setTimeout(() => {
-                    showToast('Feedback submitted successfully!', 'success');
+                if (result.success) {
+                    showToast(result.message, 'success');
                     form.reset();
                     updateCounter(titleInput, titleCounter, 80);
                     updateCounter(messageInput, messageCounter, 600);
 
-                    submitBtn.innerHTML = originalContent;
-                    submitBtn.disabled = false;
-                }, 2000);
-            } else {
-                showToast('Please fill in all required fields.', 'error');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 900);
+                } else {
+                    showToast(result.message || 'An error occurred', 'error');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Server error. Please try again later.', 'error');
+            } finally {
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
             }
         });
     });

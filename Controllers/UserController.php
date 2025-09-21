@@ -2,15 +2,26 @@
 
 namespace Controllers;
 
+use Services\CategoryService;
+
 class UserController
 {
+    private CategoryService $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     public function home(): void
     {
         require __DIR__ . '/../views/user/home.php';
     }
 
-    public function submitFeedback(): void
+    public function showSubmitFeedback(): void
     {
+        $categories = $this->categoryService->getCategoriesForFeedback();
+
         require __DIR__ . '/../views/user/submit-feedback.php';
     }
 

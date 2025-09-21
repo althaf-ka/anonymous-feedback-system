@@ -121,22 +121,6 @@
     transform: none;
 }
 
-/* Loading Spinner */
-.loading-spinner {
-    width: 14px;
-    height: 14px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;

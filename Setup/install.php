@@ -68,6 +68,23 @@ try {
         )
     ");
 
+    $db->query("
+        CREATE TABLE IF NOT EXISTS feedbacks (
+            id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+            title VARCHAR(80) NOT NULL,
+            message VARCHAR(600) NOT NULL,
+            category_id BINARY(16) NOT NULL,
+            is_public TINYINT(1) NOT NULL DEFAULT 0,
+            allow_public TINYINT(1) NOT NULL DEFAULT 0,
+            rating TINYINT UNSIGNED NOT NULL DEFAULT 0,
+            contact_details VARCHAR(255) DEFAULT NULL,
+            status ENUM('new', 'review', 'progress', 'resolved') NOT NULL DEFAULT 'new',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            resolved_at TIMESTAMP NULL,
+            FOREIGN KEY (category_id) REFERENCES categories(id)
+        )
+    ");
+
     echo "🎉 Setup completed successfully.\n";
 
     $db->close();

@@ -48,8 +48,13 @@ class CategoryRepository
         );
     }
 
-    public function findAll(): array
+    public function findAll(array $columns = ['*']): array
     {
-        return $this->db->fetchAll("SELECT * FROM categories ORDER BY name ASC");
+        $cols = array_map(
+            fn($col) => $col === 'id' ? 'BIN_TO_UUID(id) AS id' : $col,
+            $columns
+        );
+        $colsString = implode(', ', $cols);
+        return $this->db->fetchAll("SELECT $colsString FROM categories ORDER BY name ASC");
     }
 }
