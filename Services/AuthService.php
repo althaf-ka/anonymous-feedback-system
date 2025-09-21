@@ -2,7 +2,7 @@
 
 namespace Services;
 
-use models\Admin;
+use Models\Admin;
 use Repositories\AdminRepository;
 use Exception;
 

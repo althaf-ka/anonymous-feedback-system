@@ -60,6 +60,14 @@ try {
         echo "ℹ️ Admin already exists: {$adminEmail}\n";
     }
 
+    $db->query("
+        CREATE TABLE IF NOT EXISTS categories (
+            id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+            name VARCHAR(255) NOT NULL UNIQUE,
+            color VARCHAR(20) NOT NULL UNIQUE
+        )
+    ");
+
     echo "🎉 Setup completed successfully.\n";
 
     $db->close();

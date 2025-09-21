@@ -19,6 +19,7 @@ class AuthMiddleware
 
                 if ($acceptsJson) {
                     Response::error("Unauthorized. Please login first", [], 401);
+                    header("Location: /admin/login");
                     exit;
                 } else {
                     header("Location: /admin/login");

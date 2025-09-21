@@ -89,6 +89,11 @@ class Database
         return true;
     }
 
+    public function getLastInsertId(): int
+    {
+        return $this->getConnection()->insert_id;
+    }
+
     /**
      * Close connection optional only.
      */
