@@ -18,3 +18,6 @@ require __DIR__ . '/../global/header.php';
 <?php
 $body = ob_get_clean();
 require __DIR__ . '/../global/base-layout.php';
+?>
+
+<script src="/assets/js/vote.js" defer></script>

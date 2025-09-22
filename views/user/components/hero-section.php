@@ -34,16 +34,16 @@
     </div>
 
     <div class="stats">
-        <div class="stat" data-animate="247">
-            <span class="stat-number">0</span>
+        <div class="stat" data-animate="<?= $data['stats']['total'] ?>">
+            <span class="stat-number"><?= $data['stats']['total'] ?></span>
             <span class="stat-label">Total Submissions</span>
         </div>
-        <div class="stat" data-animate="89">
-            <span class="stat-number">0</span>
+        <div class="stat" data-animate="<?= $data['stats']['public'] ?>">
+            <span class="stat-number"><?= $data['stats']['public'] ?></span>
             <span class="stat-label">Public Suggestions</span>
         </div>
-        <div class="stat" data-animate="34">
-            <span class="stat-number">0</span>
+        <div class="stat" data-animate="<?= $data['stats']['resolved'] ?>">
+            <span class="stat-number"><?= $data['stats']['resolved'] ?></span>
             <span class="stat-label">Issues Resolved</span>
         </div>
     </div>

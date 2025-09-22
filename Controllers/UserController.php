@@ -3,18 +3,21 @@
 namespace Controllers;
 
 use Services\CategoryService;
+use Services\UserService;
 
 class UserController
 {
     private CategoryService $categoryService;
 
-    public function __construct(CategoryService $categoryService)
+    public function __construct(CategoryService $categoryService, private UserService $userService)
     {
         $this->categoryService = $categoryService;
     }
 
     public function home(): void
     {
+        $data = $this->userService->getHomePageData();
+
         require __DIR__ . '/../views/user/home.php';
     }
 

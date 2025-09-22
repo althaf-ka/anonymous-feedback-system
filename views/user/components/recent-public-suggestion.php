@@ -1,50 +1,5 @@
 <?php
-
 include 'feedback-card.php';
-
-
-$suggestions = [
-    [
-        'id' => 1,
-        'category' => 'academics',
-        'category_name' => 'Academics',
-        'title' => 'Extended Library Hours During Exams',
-        'preview' => 'The library should stay open 24/7 during exam periods to accommodate different study schedules and reduce overcrowding during peak hours.',
-        'votes' => 23,
-        'status' => 'Under Review',
-        'date' => '2 days ago'
-    ],
-    [
-        'id' => 2,
-        'category' => 'facilities',
-        'category_name' => 'Facilities',
-        'title' => 'More Study Spaces in Common Areas',
-        'preview' => 'Convert some recreational areas into quiet study spaces with proper lighting, charging stations, and comfortable seating for students.',
-        'votes' => 18,
-        'status' => 'New',
-        'date' => '4 days ago'
-    ],
-    [
-        'id' => 3,
-        'category' => 'food',
-        'category_name' => 'Food Services',
-        'title' => 'Healthier Meal Options in Cafeteria',
-        'preview' => 'Include more vegetarian, vegan, and gluten-free options with clear nutritional information and ingredient lists for students.',
-        'votes' => 15,
-        'status' => 'In Progress',
-        'date' => '1 week ago'
-    ],
-    [
-        'id' => 4,
-        'category' => 'mental-health',
-        'category_name' => 'Mental Health',
-        'title' => 'Peer Support Groups',
-        'preview' => 'Establish student-led support groups for stress management, anxiety, and academic pressure with professional guidance.',
-        'votes' => 31,
-        'status' => 'Approved',
-        'date' => '1 week ago'
-    ]
-];
 ?>
 
 <section class="recent-suggestions">
@@ -53,33 +8,57 @@ $suggestions = [
             <h2 class="section-title">Recent Public Suggestions</h2>
             <p class="section-subtitle">See what your fellow students are saying</p>
         </div>
+        <?php if (!empty($suggestions)): ?>
+            <div class="suggestions-wrapper">
+                <div class="suggestions-container">
+                    <?php foreach ($suggestions as $index => $suggestion): ?>
+                        <div class="suggestion-item <?= $index === count($suggestions) - 1 ? 'last-item' : '' ?>">
+                            <?= renderFeedbackCard($suggestion) ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
 
-        <div class="suggestions-wrapper">
-            <div class="suggestions-container">
-                <?php foreach ($suggestions as $index => $suggestion): ?>
-                    <div class="suggestion-item <?= $index === count($suggestions) - 1 ? 'last-item' : '' ?>">
-                        <?= renderFeedbackCard($suggestion) ?>
+                <div class="blur-overlay">
+                    <div class="overlay-content">
+                        <a href="/public-suggestions" class="btn btn-outline view-all-btn">
+                            <span>View All Suggestions</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                        <!-- We subtract the count of suggestions shown from the total -->
+                        <p class="overlay-text">+<?= $totalSuggestions - count($suggestions) ?> more suggestions</p>
                     </div>
-                <?php endforeach; ?>
-            </div>
-
-            <div class="blur-overlay">
-                <div class="overlay-content">
-                    <a href="/public-suggestions" class="btn btn-outline view-all-btn">
-                        <span>View All Suggestions</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                    </a>
-                    <p class="overlay-text">+12 more suggestions</p>
                 </div>
             </div>
-        </div>
+
+        <?php else: ?>
+
+            <div class="empty-state">
+                <div class="empty-state__icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </div>
+                <h3 class="empty-state__title">Be the First to Suggest an Idea!</h3>
+                <p class="empty-state__message">
+                    This space is waiting for brilliant ideas from our community. Share your thoughts and help shape our campus future.
+                </p>
+                <a href="/submit-feedback" class="btn btn-primary submit-idea-btn">
+                    <span>Share Your Idea</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+        <?php endif; ?>
+
     </div>
 </section>
 
 <style>
+    /* Your existing styles are perfect, just add the new ones below */
     .recent-suggestions {
         padding: 4rem 1.5rem;
         position: relative;
@@ -163,6 +142,61 @@ $suggestions = [
         margin: 0;
         opacity: 0.8;
     }
+
+    /* ================================== */
+    /* ✨ NEW: Empty State Styles Here ✨ */
+    /* ================================== */
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1.5rem;
+        background-color: #f8f9fa;
+        /* A light, neutral background */
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        /* A subtle border */
+        margin-top: 1.5rem;
+        /* Space between header and this box */
+        opacity: 0;
+        animation: fadeInUp 0.6s ease 0.2s forwards;
+    }
+
+    .empty-state__icon {
+        color: #0d6efd;
+        /* Your primary brand color */
+        margin-bottom: 1rem;
+    }
+
+    .empty-state__icon svg {
+        opacity: 0.7;
+    }
+
+    .empty-state__title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #343a40;
+        /* Darker text for the title */
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state__message {
+        font-size: 1rem;
+        color: #6c757d;
+        /* Softer text color for the message */
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+
+    .submit-idea-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 1.5rem;
+        padding: 0.875rem 1.75rem;
+    }
+
 
     @media (max-width: 768px) {
         .recent-suggestions {

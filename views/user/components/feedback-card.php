@@ -1,30 +1,12 @@
 <?php
 function renderFeedbackCard($data)
 {
-    $categoryColors = [
-        'academics' => 'academics',
-        'facilities' => 'facilities',
-        'food' => 'food',
-        'mental-health' => 'mental-health',
-        'general' => 'general'
-    ];
-
-    $statusClasses = [
-        'New' => 'status-new',
-        'Under Review' => 'status-review',
-        'In Progress' => 'status-progress',
-        'Resolved' => 'status-resolved',
-    ];
-
-    $categoryClass = $categoryColors[$data['category']] ?? 'general';
-    $statusClass = $statusClasses[$data['status']] ?? 'status-new';
-
     ob_start();
-    ?>
+?>
     <div class="feedback-card rounded-sm" data-category="<?= htmlspecialchars($data['category']) ?>"
         data-status="<?= htmlspecialchars($data['status']) ?>">
         <div class="card-left">
-            <div class="category-indicator <?= $categoryClass ?>"></div>
+            <div class="category-indicator" style="--indicator-color: <?= htmlspecialchars($data['category_color']) ?>;"></div>
             <div class="card-content">
                 <div class="card-meta">
                     <span class="category-name"><?= htmlspecialchars($data['category_name']) ?></span>
@@ -41,7 +23,7 @@ function renderFeedbackCard($data)
             </div>
         </div>
         <div class="card-right">
-            <div class="status-badge <?= $statusClass ?>">
+            <div class="rounded-sm status-badge status-<?= $data['status'] ?>">
                 <?= htmlspecialchars($data['status']) ?>
             </div>
             <div class="vote-section">
@@ -54,7 +36,7 @@ function renderFeedbackCard($data)
                         <span class="vote-count"><?= $data['votes'] ?></span>
                     </div>
                 <?php else: ?>
-                    <button class="vote-button" onclick="handleVote(this, <?= $data['id'] ?>)">
+                    <button class="vote-button" data-id="<?= htmlspecialchars($data['id']) ?>">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M7 10l5-5 5 5" />
                             <path d="M12 5v14" />
@@ -66,7 +48,7 @@ function renderFeedbackCard($data)
             </div>
         </div>
     </div>
-    <?php
+<?php
     return ob_get_clean();
 }
 ?>
@@ -129,23 +111,10 @@ function renderFeedbackCard($data)
         min-height: 60px;
         border-radius: 2px;
         flex-shrink: 0;
-    }
-
-    /* Category Colors Based on Type */
-    .category-indicator.academics {
-        background: linear-gradient(180deg, #3B82F6, #60A5FA);
-    }
-
-    .category-indicator.facilities {
-        background: linear-gradient(180deg, #8B5CF6, #A78BFA);
-    }
-
-    .category-indicator.food {
-        background: linear-gradient(180deg, #F59E0B, #FBBF24);
-    }
-
-    .category-indicator.mental-health {
-        background: linear-gradient(180deg, #EC4899, #F472B6);
+        opacity: 90%;
+        background: linear-gradient(180deg,
+                color-mix(in srgb, var(--indicator-color) 90%, white 10%) 0%,
+                var(--indicator-color) 100%);
     }
 
     .category-indicator.general {
@@ -220,7 +189,6 @@ function renderFeedbackCard($data)
         font-size: 0.75rem;
         font-weight: 600;
         padding: 0.35rem 0.7rem;
-        border-radius: 12px;
         text-transform: uppercase;
         letter-spacing: 0.03em;
         white-space: nowrap;

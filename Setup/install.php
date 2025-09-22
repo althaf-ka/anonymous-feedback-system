@@ -80,7 +80,7 @@ try {
             contact_details VARCHAR(255) DEFAULT NULL,
             status ENUM('new', 'review', 'progress', 'resolved') NOT NULL DEFAULT 'new',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            resolved_at TIMESTAMP NULL,
+            resolved_at TIMESTAMP DEFAULT NULL,
             FOREIGN KEY (category_id) REFERENCES categories(id)
         )
     ");

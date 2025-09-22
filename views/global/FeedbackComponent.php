@@ -265,8 +265,9 @@ class FeedbackComponent
             HTML;
             }
 
+            $feedbackIdStr = htmlspecialchars((string)$feedbackId);
             return <<<HTML
-            <button class="vote-button" onclick="handleVote({$feedbackId})">
+            <button class="vote-button" data-id="{$feedbackIdStr}">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M7 10l5-5 5 5" />
                     <path d="M12 5v14" />
