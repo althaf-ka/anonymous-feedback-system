@@ -84,6 +84,7 @@ class AdminController
 
   public function viewCategories(): void
   {
+    $categories = $this->categoryService->getCategories(8, 0);
     require __DIR__ . "/../views/admin/view-categories.php";
   }
 

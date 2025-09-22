@@ -50,7 +50,10 @@ $router->post('/admin/delete/feedback', 'FeedbackController@deleteFeedbacks');
 $router->get('/admin/feedback/{id}', 'AdminController@viewFeedback');
 $router->get('/admin/api/feedbacks', 'FeedbackController@fetchFeedbacks');
 $router->get('/admin/categories', 'AdminController@viewCategories');
+$router->get('/admin/api/categories', 'CategoryController@getCategories');
+$router->post('/admin/delete/category', 'CategoryController@deleteCategory');
 $router->post('/admin/categories/add', 'CategoryController@createCategory');
+$router->post('/admin/category/delete', 'CategoryController@deleteCategory');
 $router->post('/admin/status/change', 'FeedbackController@changeStatus');
 
 

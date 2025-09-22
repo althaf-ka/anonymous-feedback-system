@@ -32,4 +32,24 @@ class CategoryController
             'id' => $categoryId
         ]);
     }
+
+    public function getCategories(): void
+    {
+        $limit = (int) ($_GET['limit'] ?? 20);
+        $offset = (int) ($_GET['offset'] ?? 0);
+
+        $data = $this->categoryService->getCategories($limit, $offset);
+        Response::success("Categories fetched successfully", $data);
+    }
+
+    public function deleteCategory(): void
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        Validator::require(["id"], $data);
+
+        $id = $data['id'];
+
+        $this->categoryService->deleteCategory($id);
+        Response::success("Category deleted successfully");
+    }
 }

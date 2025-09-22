@@ -5,14 +5,6 @@ $showSidebar = $showHeader = true;
 
 require_once __DIR__ . '/../admin/components/modal.php';
 
-// Example dataset
-$categories = [
-    ['id' => 1, 'name' => 'Academics', 'color' => '#2563eb', 'feedbacks' => 42],
-    ['id' => 2, 'name' => 'Facilities', 'color' => '#16a34a', 'feedbacks' => 28],
-    ['id' => 3, 'name' => 'Food Services', 'color' => '#f59e0b', 'feedbacks' => 15],
-    ['id' => 4, 'name' => 'Mental Health', 'color' => '#dc2626', 'feedbacks' => 9],
-    ['id' => 5, 'name' => 'General', 'color' => '#6b7280', 'feedbacks' => 63],
-];
 
 ob_start();
 ?>
@@ -35,7 +27,7 @@ ob_start();
             </div>
 
             <div class="table-body">
-                <?php foreach ($categories as $cat): ?>
+                <?php foreach ($categories['categories'] as $cat): ?>
                     <div class="table-row" data-category-id="<?= $cat['id'] ?>">
                         <div class="cell cell-name">
                             <span class="category-name"><?= htmlspecialchars(ucwords($cat['name'])) ?></span>
@@ -125,19 +117,76 @@ renderModal(
 ?>
 
 <script>
-    let categoryToDelete = null;
+    class CategoryManager {
+        constructor(initialData) {
+            this.tableBody = document.querySelector(".table-body");
+            this.addCategoryForm = document.getElementById("add-category-form");
+            this.confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+            this.categoryToDelete = null;
 
-    function capitalizeWords(str) {
-        return str.replace(/\b\w/g, char => char.toUpperCase());
-    }
+            // --- Infinite Scroll State ---
+            this.limit = <?= $categories['limit'] ?? 8 ?>; // Use the limit from the initial load
+            this.offset = initialData.categories ? initialData.categories.length : 0;
+            this.totalAvailable = initialData.total || 0;
+            this.isLoadingMore = false;
 
-    function createCategoryRow(id, name, color) {
-        const row = document.createElement("div");
-        row.className = "table-row";
-        row.dataset.categoryId = id;
+            this.setupScrollObserver();
+            this.bindEvents();
+            this.updateScrollTriggerVisibility();
+        }
 
-        row.innerHTML = `
-            <div class="cell cell-name"><span class="category-name">${capitalizeWords(name)}</span></div>
+        setupScrollObserver() {
+            this.scrollTrigger = document.createElement("div");
+            this.scrollTrigger.id = "infinite-scroll-trigger";
+            this.scrollTrigger.innerHTML = `<span>Loading more...</span>`;
+            document.querySelector('.table-wrapper').insertAdjacentElement("afterend", this.scrollTrigger);
+
+            this.observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    this.loadMoreCategories();
+                }
+            }, {
+                rootMargin: "200px"
+            });
+
+            this.observer.observe(this.scrollTrigger);
+        }
+
+        bindEvents() {
+            this.addCategoryForm.addEventListener("submit", (e) => this.handleAddCategory(e));
+
+            // Use event delegation for delete buttons
+            this.tableBody.addEventListener('click', (e) => {
+                const deleteBtn = e.target.closest('.delete-btn');
+                if (deleteBtn) {
+                    const row = deleteBtn.closest('.table-row');
+                    const id = row.dataset.categoryId;
+                    const name = row.querySelector('.category-name').textContent;
+                    this.openDeleteModal(id, name);
+                }
+            });
+
+            this.confirmDeleteBtn.addEventListener('click', () => {
+                if (this.categoryToDelete) {
+                    this.deleteCategory(this.categoryToDelete.id, this.categoryToDelete.name);
+                    closeModal("confirmDelete");
+                }
+            });
+        }
+
+        capitalizeWords(str) {
+            return str.replace(/\b\w/g, char => char.toUpperCase());
+        }
+
+        createCategoryRow(id, name, color, feedbackCount = 0) {
+            const row = document.createElement("div");
+            row.className = "table-row";
+            row.dataset.categoryId = id;
+
+            const safeName = name.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+
+            row.innerHTML = `
+            <div class="cell cell-name"><span class="category-name">${this.capitalizeWords(name)}</span></div>
             <div class="cell cell-color">
                 <div class="color-display">
                     <span class="color-swatch" style="background-color: ${color}"></span>
@@ -146,115 +195,140 @@ renderModal(
             </div>
             <div class="cell cell-feedbacks">
                 <div class="feedback-stats">
-                    <span class="feedback-count">0</span>
+                    <span class="feedback-count">${feedbackCount}</span>
                     <span class="feedback-label">items</span>
                 </div>
             </div>
             <div class="cell cell-actions">
-                <button class="delete-btn rounded-sm" onclick="openDeleteModal(${id}, '${name}')">Delete</button>
+                <button class="delete-btn rounded-sm">Delete</button>
             </div>
         `;
-        return row;
-    }
-
-    function openDeleteModal(id, name) {
-        categoryToDelete = {
-            id,
-            name
-        };
-
-        document.getElementById("deleteModalMessage").innerHTML =
-            `Are you sure you want to delete <strong>${capitalizeWords(name)}</strong>? This action cannot be undone.`;
-
-        const confirmBtn = document.getElementById("confirmDeleteBtn");
-        confirmBtn.onclick = () => {
-            deleteCategory(id, name);
-            closeModal("confirmDelete");
-        };
-
-        openModal("confirmDelete");
-    }
-
-    async function deleteCategory(id, name) {
-        const row = document.querySelector(`[data-category-id="${id}"]`);
-        const deleteBtn = row.querySelector(".delete-btn");
-
-        deleteBtn.disabled = true;
-        deleteBtn.innerHTML = `<span class="loading-spinner"></span> Deleting...`;
-
-        try {
-            const response = await fetch("/admin/categories/delete", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id
-                })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                row.style.opacity = "0";
-                row.style.transform = "translateX(-20px)";
-                setTimeout(() => row.remove(), 300);
-
-                if (!document.querySelector(".table-row")) location.reload();
-            } else {
-                throw new Error(result.message || "Failed to delete category");
-            }
-        } catch (error) {
-            alert("Error: " + error.message);
-            deleteBtn.disabled = false;
-            deleteBtn.textContent = "Delete";
+            return row;
         }
-    }
 
-    const form = document.getElementById("add-category-form");
+        openDeleteModal(id, name) {
+            this.categoryToDelete = {
+                id,
+                name
+            };
+            document.getElementById("deleteModalMessage").innerHTML =
+                `Are you sure you want to delete <strong>${this.capitalizeWords(name)}</strong>? This action cannot be undone.`;
+            openModal("confirmDelete");
+        }
 
-    form.addEventListener("submit", async function(e) {
-        e.preventDefault();
+        async deleteCategory(id) {
+            const row = document.querySelector(`[data-category-id="${id}"]`);
+            const originalBtnText = this.confirmDeleteBtn.textContent;
 
-        const saveBtn = document.querySelector('button[type="submit"][form="add-category-form"]');
-        saveBtn.disabled = true;
-        saveBtn.textContent = "Saving...";
+            // Set loading state ON THE MODAL BUTTON
+            this.confirmDeleteBtn.disabled = true;
+            this.confirmDeleteBtn.innerHTML = `<span class="loading-spinner"></span> Deleting...`;
 
-        const formData = new FormData(form);
+            try {
+                const response = await fetch("/admin/delete/category", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify({
+                        id
+                    })
+                });
+                const result = await response.json();
 
-        try {
-            const response = await fetch("/admin/categories/add", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "Accept": "application/json"
+                if (result.success) {
+                    closeModal("confirmDelete");
+                    row.style.opacity = "0";
+                    setTimeout(() => row.remove(), 300);
+                    showToast("Category deleted successfully!", "success");
+                } else {
+                    throw new Error(result.message);
                 }
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                closeModal("addCategoryModal");
-
-                const tableBody = document.querySelector(".table-body");
-                const name = formData.get("name");
-                const color = formData.get("color");
-
-                const newRow = createCategoryRow(result.data.id, name, color);
-                tableBody.appendChild(newRow);
-
-                form.reset();
-                showToast("Category added successfully!", "success");
-            } else {
-                throw new Error(result.message || "Failed to add category");
+            } catch (error) {
+                showToast(error.message || "Failed to delete category", "error");
+            } finally {
+                this.confirmDeleteBtn.disabled = false;
+                this.confirmDeleteBtn.innerHTML = originalBtnText;
+                this.categoryToDelete = null; // Clear the state
             }
-        } catch (err) {
-            showToast(err.message, "error");
-        } finally {
-            saveBtn.textContent = "Save";
-            saveBtn.disabled = false;
         }
-    });
+
+        async handleAddCategory(e) {
+            e.preventDefault();
+            const saveBtn = document.querySelector('button[type="submit"][form="add-category-form"]');
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving...";
+
+            const formData = new FormData(this.addCategoryForm);
+            try {
+                const response = await fetch("/admin/categories/add", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+                const result = await response.json();
+                if (result.success) {
+                    closeModal("addCategoryModal");
+                    const newRow = this.createCategoryRow(result.data.id, formData.get("name"), formData.get("color"));
+                    this.tableBody.prepend(newRow);
+                    this.addCategoryForm.reset();
+                    showToast("Category added successfully!", "success");
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (err) {
+                showToast(err.message || "Failed to add category", "error");
+            } finally {
+                saveBtn.textContent = "Save";
+                saveBtn.disabled = false;
+            }
+        }
+
+        // --- Infinite Scroll Methods ---
+
+        updateScrollTriggerVisibility() {
+            if (this.offset < this.totalAvailable) {
+                this.scrollTrigger.style.display = 'block';
+            } else {
+                this.scrollTrigger.style.display = 'none';
+            }
+        }
+
+        async loadMoreCategories() {
+            if (this.isLoadingMore || this.offset >= this.totalAvailable) {
+                return;
+            }
+            this.isLoadingMore = true;
+            this.scrollTrigger.classList.add('loading');
+
+            try {
+                const response = await fetch(`/admin/api/categories?limit=${this.limit}&offset=${this.offset}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const newCategories = result.data.categories;
+                    this.offset += newCategories.length;
+
+                    newCategories.forEach(cat => {
+                        const newRow = this.createCategoryRow(cat.id, cat.name, cat.color, cat.feedbacks);
+                        this.tableBody.appendChild(newRow);
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to load more categories:", err);
+            } finally {
+                this.isLoadingMore = false;
+                this.scrollTrigger.classList.remove('loading');
+                this.updateScrollTriggerVisibility();
+            }
+        }
+    }
+
+    const initialData = <?= json_encode($categories) ?>;
+    new CategoryManager(initialData);
 </script>
 
 <?php

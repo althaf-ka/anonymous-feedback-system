@@ -37,4 +37,33 @@ class CategoryService
     {
         return $this->categoryRepo->findAll(['id', 'name']);
     }
+
+    public function deleteCategory(string $id): bool
+    {
+        try {
+            $deleted = $this->categoryRepo->deleteById($id);
+
+            if (!$deleted) {
+                throw new Exception("Failed to delete category. Please try again later.");
+            }
+
+            return $deleted;
+        } catch (Exception $e) {
+            if (stripos($e->getMessage(), 'foreign key constraint') !== false) {
+                throw new Exception(
+                    "Cannot delete this category because there are feedbacks associated with it."
+                );
+            }
+            throw $e;
+        }
+    }
+    public function getCategories(int $limit = 20, int $offset = 0): array
+    {
+        $categories = $this->categoryRepo->findAllWithFeedbackCount($limit, $offset);
+        $total = $this->categoryRepo->countAll();
+        return [
+            'categories' => $categories,
+            'total' => $total
+        ];
+    }
 }
