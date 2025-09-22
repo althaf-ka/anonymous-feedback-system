@@ -72,7 +72,6 @@ class AdminController
     $sort = 'recent';
 
     $rows = $this->feedbackService->getFilteredFeedbacks($filters, $limit, $offset, $sort);
-    // error_log(print_r($rows, true));
 
     require __DIR__ . "/../views/admin/feedback.php";
   }

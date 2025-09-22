@@ -79,6 +79,11 @@ document.addEventListener("DOMContentLoaded", () => {
           this.toggleDeleteButton();
         }
       });
+
+      this.deleteButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.handleDeleteSelected();
+      });
     }
 
     toggleDeleteButton() {
@@ -227,9 +232,94 @@ document.addEventListener("DOMContentLoaded", () => {
       const loadingOverlay = this.tableWrapper.querySelector(".loading-overlay");
       if (loadingOverlay) loadingOverlay.remove();
     }
+
+    async handleDeleteSelected() {
+      const ids = [...this.form.querySelectorAll(".row-cb:checked")].map((cb) => cb.value);
+
+      if (ids.length === 0) {
+        showToast("Please select at least one item to delete.", "warning");
+        return;
+      }
+
+      const confirmed = await showConfirmationModal(
+        "Confirm Deletion",
+        `Are you sure you want to delete ${ids.length} item(s)? This action cannot be undone.`
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      this.deleteButton.disabled = true;
+      this.deleteButton.innerHTML = `<span class="loading-spinner"></span> Deleting...`;
+
+      try {
+        const response = await fetch("/admin/delete/feedback", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body: JSON.stringify({ ids }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showToast(result.message || "Items deleted successfully.", "success");
+
+          this.handleFilterChange();
+        } else {
+          throw new Error(result.message || "Failed to delete the selected items.");
+        }
+      } catch (err) {
+        showToast(err.message, "error");
+      } finally {
+        this.deleteButton.disabled = false;
+        this.deleteButton.innerHTML = "Delete Selected";
+        this.toggleDeleteButton();
+      }
+    }
   }
 
   if (typeof initialFeedbackData !== "undefined") {
     new FeedbackFilters(initialFeedbackData);
+  }
+
+  function showConfirmationModal(title, message) {
+    return new Promise((resolve) => {
+      const modal = document.getElementById("delete-confirmation-modal");
+      if (!modal) {
+        resolve(false);
+        return;
+      }
+
+      modal.querySelector(".modal-header h2").textContent = title;
+      modal.querySelector(".modal-body").innerHTML = `<p>${message}</p>`;
+
+      const confirmBtn = modal.querySelector("#confirm-delete-btn");
+      const cancelBtns = modal.querySelectorAll("[data-close-modal]");
+
+      const onConfirm = () => {
+        cleanup();
+        resolve(true);
+      };
+
+      const onCancel = () => {
+        cleanup();
+        resolve(false);
+      };
+
+      const cleanup = () => {
+        confirmBtn.removeEventListener("click", onConfirm);
+        cancelBtns.forEach((btn) => btn.removeEventListener("click", onCancel));
+        closeModal("delete-confirmation-modal");
+      };
+
+      confirmBtn.addEventListener("click", onConfirm, { once: true });
+      cancelBtns.forEach((btn) => btn.addEventListener("click", onCancel, { once: true }));
+
+      openModal("delete-confirmation-modal");
+    });
   }
 });

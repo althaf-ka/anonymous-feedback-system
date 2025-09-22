@@ -66,4 +66,28 @@ class FeedbackController
 
         Response::success('Feedback status updated successfully');
     }
+
+    public function deleteFeedbacks(): void
+    {
+        try {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $ids = $data['ids'] ?? null;
+
+            if (empty($ids) || !is_array($ids)) {
+                Response::error('No feedback IDs provided.', [], 422);
+                return;
+            }
+
+            $deletedResponse = $this->feedbackService->deleteFeedbacks($ids);
+
+            if ($deletedResponse) {
+                Response::success("Feedback deleted successfully.");
+            } else {
+                Response::error("No matching items were found to delete.", [], 404);
+            }
+        } catch (\Throwable $e) {
+            error_log("Bulk delete error: " . $e->getMessage());
+            Response::error("An internal server error occurred while deleting.", [], 500);
+        }
+    }
 }

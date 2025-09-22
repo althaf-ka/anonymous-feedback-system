@@ -40,4 +40,14 @@ class FeedbackService
 
         return $response;
     }
+    public function deleteFeedbacks(array $ids): int
+    {
+        $deleted = $this->feedbackRepo->deleteByIds($ids);
+
+        if ($deleted === 0) {
+            throw new Exception("No feedback entries were deleted.");
+        }
+
+        return $deleted;
+    }
 }

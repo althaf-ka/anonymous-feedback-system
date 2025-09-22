@@ -46,6 +46,7 @@ $router->post('/admin/login', 'AdminController@loginProcess');
 $router->get('/admin/logout', 'AdminController@logout');
 $router->get('/admin/dashboard', 'AdminController@dashboard');
 $router->get('/admin/feedback', 'AdminController@showAdminFeedbackPage');
+$router->post('/admin/delete/feedback', 'FeedbackController@deleteFeedbacks');
 $router->get('/admin/feedback/{id}', 'AdminController@viewFeedback');
 $router->get('/admin/api/feedbacks', 'FeedbackController@fetchFeedbacks');
 $router->get('/admin/categories', 'AdminController@viewCategories');

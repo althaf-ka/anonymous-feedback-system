@@ -98,4 +98,17 @@ class FeedbackRepository
             [$status, $id]
         );
     }
+
+    public function deleteByIds(array $uuids): int
+    {
+        if (empty($uuids)) {
+            return 0;
+        }
+
+        $placeholders = implode(',', array_fill(0, count($uuids), 'UUID_TO_BIN(?)'));
+
+        $sql = "DELETE FROM feedbacks WHERE id IN ($placeholders)";
+
+        return $this->db->query($sql, $uuids);
+    }
 }

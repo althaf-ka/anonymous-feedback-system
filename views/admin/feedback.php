@@ -4,6 +4,7 @@ $headAssets[] = '<link rel="stylesheet" href="/assets/css/pages/feedback.css">';
 $showSidebar = $showHeader = true;
 
 include __DIR__ . "/components/status-selector.php";
+require_once __DIR__ . "/components/modal.php";
 
 ob_start();
 ?>
@@ -98,3 +99,17 @@ ob_start();
 
 <?php $content = ob_get_clean();
 include __DIR__ . '/layout.php'; ?>
+
+<?php
+$deleteModalFooter = <<<HTML
+    <button type="button" class="btn btn-ghost" data-close-modal="delete-confirmation-modal">Cancel</button>
+    <button type="button" id="confirm-delete-btn" class="btn btn-danger">Confirm Delete</button>
+HTML;
+
+renderModal(
+    'delete-confirmation-modal',
+    'Confirm Deletion',
+    '<p>Are you sure you want to delete the selected item(s)? This action cannot be undone.</p>',
+    $deleteModalFooter
+);
+?>
