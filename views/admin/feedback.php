@@ -92,6 +92,20 @@ ob_start();
     </form>
 </section>
 
+<?php
+$deleteModalFooter = <<<HTML
+    <button type="button" class="btn btn-ghost" data-close-modal="delete-confirmation-modal">Cancel</button>
+    <button type="button" id="confirm-delete-btn" class="btn btn-danger">Confirm Delete</button>
+HTML;
+
+renderModal(
+    'delete-confirmation-modal',
+    'Confirm Deletion',
+    '<p>Are you sure you want to delete the selected item(s)? This action cannot be undone.</p>',
+    $deleteModalFooter
+);
+?>
+
 <script>
     const initialFeedbackData = <?= json_encode($rows) ?>;
 </script>
