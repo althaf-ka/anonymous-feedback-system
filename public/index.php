@@ -44,10 +44,12 @@ $router->get('/admin/login', 'AdminController@loginPage');
 $router->post('/admin/login', 'AdminController@loginProcess');
 $router->get('/admin/logout', 'AdminController@logout');
 $router->get('/admin/dashboard', 'AdminController@dashboard');
-$router->get('/admin/feedback', 'AdminController@feedback');
+$router->get('/admin/feedback', 'AdminController@showAdminFeedbackPage');
 $router->get('/admin/feedback/{id}', 'AdminController@viewFeedback');
+$router->get('/admin/api/feedbacks', 'FeedbackController@fetchFeedbacks');
 $router->get('/admin/categories', 'AdminController@viewCategories');
 $router->post('/admin/categories/add', 'CategoryController@createCategory');
+$router->post('/admin/status/change', 'FeedbackController@changeStatus');
 
 
 $router->resolve();

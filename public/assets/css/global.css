@@ -561,3 +561,7 @@ a {
     transform: rotate(360deg);
   }
 }
+
+.text-capitalize {
+  text-transform: capitalize;
+}

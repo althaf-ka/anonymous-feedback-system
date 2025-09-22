@@ -95,10 +95,79 @@
     .feedback-section .status-cell {
         width: 150px;
     }
+
+    .admin-feedback-filter {
+        margin-top: 0.85rem;
+    }
 }
 
 @media(max-width:640px) {
     .feedback-section .feedback-table {
         font-size: .8rem;
+    }
+}
+
+.table-body {
+    display: contents;
+}
+
+.table-message-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border);
+}
+
+.table-message-state.error {
+    color: var(--color-error, #ef4444);
+}
+
+/* Basic styling for the loading overlay */
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    font-weight: 600;
+}
+
+.feedback-section .page-head {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.admin-feedback-filter {
+    padding-bottom: 2rem;
+    margin-bottom: 0.825rem;
+    border-bottom: 2px solid var(--color-border);
+}
+
+#infinite-scroll-trigger {
+    display: none;
+    padding: 2rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+#infinite-scroll-trigger.loading span {
+
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
     }
 }

@@ -24,4 +24,20 @@ class FeedbackService
 
         return $response;
     }
+
+    public function getFilteredFeedbacks(array $filters, int $limit, int $offset, string $sort): array
+    {
+        return $this->feedbackRepo->findFiltered($filters, $limit, $offset, $sort);
+    }
+
+    public function changeFeedbackStatus(string $id, string $status): bool
+    {
+        $response = $this->feedbackRepo->updateStatus($id, $status);
+
+        if (!$response) {
+            throw new Exception("Unable to update feedback status. Please try again later.");
+        }
+
+        return $response;
+    }
 }

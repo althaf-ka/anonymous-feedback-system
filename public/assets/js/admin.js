@@ -1,21 +1,19 @@
 // status-selector.php
 
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
   const dropdown = e.target.closest(".status-dropdown");
   const option = e.target.closest(".status-dropdown__option");
 
+  // Toggle dropdown open/close
   if (dropdown && e.target.closest(".status-dropdown__btn")) {
     if (dropdown.classList.contains("open")) {
-      dropdown.classList.remove("open"); 
+      dropdown.classList.remove("open");
     } else {
-      document.querySelectorAll(".status-dropdown.open").forEach((el) =>
-        el.classList.remove("open")
-      );
+      document.querySelectorAll(".status-dropdown.open").forEach((el) => el.classList.remove("open"));
       dropdown.classList.add("open");
 
-
       const menu = dropdown.querySelector(".status-dropdown__menu");
-      menu.style.top = ""; 
+      menu.style.top = "";
       menu.style.bottom = "";
       const rect = menu.getBoundingClientRect();
       if (rect.bottom > window.innerHeight) {
@@ -33,77 +31,100 @@ document.addEventListener("click", (e) => {
     const id = dropdown.dataset.id;
 
     const btn = dropdown.querySelector(".status-dropdown__btn");
-    btn.querySelector(".status-dropdown__label").textContent = option.textContent;
-    btn.className = `status-dropdown__btn status-${value}`; // apply global .status-* class
+    const label = btn.querySelector(".status-dropdown__label");
 
-    dropdown.querySelectorAll(".status-dropdown__option")
-    .forEach(opt => opt.classList.remove("active"));
+    // Store old value and label
+    const oldValueClass = Array.from(btn.classList).find((cls) => cls.startsWith("status-"));
+    const oldValue = oldValueClass.replace("status-", "");
+    const oldLabel = label.textContent;
+    const oldActiveOption = dropdown.querySelector(".status-dropdown__option.active");
+
+    label.textContent = option.textContent;
+    btn.className = `status-dropdown__btn status-${value}`;
+    dropdown.querySelectorAll(".status-dropdown__option").forEach((opt) => opt.classList.remove("active"));
     option.classList.add("active");
-
     dropdown.classList.remove("open");
 
-    // It is for the view feedback page to change the Status at header onChange
     const headerStatus = document.querySelector(".feedback-header .meta-item.status-element");
     if (headerStatus) {
       headerStatus.textContent = option.textContent;
       headerStatus.className = `rounded-sm status-${value} meta-item status-element`;
     }
 
+    function revertUI() {
+      label.textContent = oldLabel;
+      btn.className = `status-dropdown__btn status-${oldValue}`;
+      option.classList.remove("active");
+      dropdown.querySelector(`[data-value="${oldValue}"]`)?.classList.add("active");
 
-    fetch(`/admin/feedback/update-status.php`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: value }),
-    });
+      if (headerStatus) {
+        headerStatus.textContent = oldLabel;
+        headerStatus.className = `rounded-sm status-${oldValue} meta-item status-element`;
+      }
+    }
+
+    try {
+      const res = await fetch("/admin/status/change", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: value }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        showToast(data.message || "Status updated successfully", "success");
+      } else {
+        revertUI();
+        showToast(data.message || "Failed to update status", "error");
+      }
+    } catch (err) {
+      revertUI();
+      showToast("Something went wrong while updating status", "error");
+    }
   }
 
-  // Close if clicking outside
+  // Close dropdowns if clicking outside
   if (!dropdown) {
-    document.querySelectorAll(".status-dropdown.open").forEach((el) =>
-      el.classList.remove("open")
-    );
+    document.querySelectorAll(".status-dropdown.open").forEach((el) => el.classList.remove("open"));
   }
 });
 
-
 //     FeedbackComponent.php
 
-document.querySelectorAll('.visibility-toggle').forEach(toggle => {
-  toggle.addEventListener('change', async function() {
-
-    const statusSpan = this.closest('.visibility-control').querySelector('.visibility-status');
+document.querySelectorAll(".visibility-toggle").forEach((toggle) => {
+  toggle.addEventListener("change", async function () {
+    const statusSpan = this.closest(".visibility-control").querySelector(".visibility-status");
     const isPublic = this.checked;
-    
-    statusSpan.textContent = isPublic ? 'Public' : 'Private';
-    
-    statusSpan.style.opacity = '0.5';
-    
+
+    statusSpan.textContent = isPublic ? "Public" : "Private";
+
+    statusSpan.style.opacity = "0.5";
+
     try {
       // Send update to server
-      await fetch('/admin/feedback/set-visibility', {
-        method: 'POST',
+      await fetch("/admin/feedback/set-visibility", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id: this.dataset.id,
-          isPublic: isPublic
-        })
+          isPublic: isPublic,
+        }),
       });
-      
 
-      statusSpan.style.opacity = '1';
-      
+      statusSpan.style.opacity = "1";
     } catch (error) {
       this.checked = !isPublic;
-      statusSpan.textContent = !isPublic ? 'Public' : 'Private';
-      statusSpan.style.opacity = '1';
-      console.error('Failed to update visibility:', error);
+      statusSpan.textContent = !isPublic ? "Public" : "Private";
+      statusSpan.style.opacity = "1";
+      console.error("Failed to update visibility:", error);
     }
   });
 });
 
-// Toggling the Official Response Element 
+// Toggling the Official Response Element
 function toggleResponseForm(showForm) {
   const view = document.getElementById("official-response-view");
   const form = document.getElementById("official-response-form");
@@ -133,16 +154,17 @@ function updateResponseUI(content, date) {
   const form = document.getElementById("official-response-form");
 
   const d = date ? new Date(date) : null;
-  const formattedDate = d && !isNaN(d)
-    ? d.toLocaleString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true
-      })
-    : "";
+  const formattedDate =
+    d && !isNaN(d)
+      ? d.toLocaleString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        })
+      : "";
 
   view.innerHTML = content
     ? `<p>${escapeHtml(content).replace(/\n/g, "<br>")}</p>
@@ -169,32 +191,27 @@ function updateResponseUI(content, date) {
 }
 
 function escapeHtml(str = "") {
-  return str.replace(/[&<>"']/g, tag =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[tag])
+  return str.replace(
+    /[&<>"']/g,
+    (tag) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[tag])
   );
 }
 
-
-
 /// Model Contols // model.php
 function openModal(id) {
-    document.getElementById(id).classList.remove('hidden');
+  document.getElementById(id).classList.remove("hidden");
 }
 
 function closeModal(id) {
-    document.getElementById(id).classList.add('hidden');
+  document.getElementById(id).classList.add("hidden");
 }
 
 // Attach close buttons
 document.addEventListener("click", function (e) {
-    if (e.target.matches("[data-close-modal]")) {
-        closeModal(e.target.getAttribute("data-close-modal"));
-    }
-    if (e.target.classList.contains("modal-overlay")) {
-        closeModal(e.target.id);
-    }
+  if (e.target.matches("[data-close-modal]")) {
+    closeModal(e.target.getAttribute("data-close-modal"));
+  }
+  if (e.target.classList.contains("modal-overlay")) {
+    closeModal(e.target.id);
+  }
 });
-
-
-
-

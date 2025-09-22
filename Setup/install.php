@@ -85,6 +85,19 @@ try {
         )
     ");
 
+    $db->query("
+    CREATE TABLE IF NOT EXISTS feedback_votes (
+        id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+        feedback_id BINARY(16) NOT NULL,
+        cookie_hash CHAR(64) NOT NULL,
+        ip_address VARCHAR(45) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(feedback_id, cookie_hash),
+        UNIQUE(feedback_id, ip_address),
+        FOREIGN KEY (feedback_id) REFERENCES feedbacks(id) ON DELETE CASCADE
+    )
+");
+
     echo "🎉 Setup completed successfully.\n";
 
     $db->close();

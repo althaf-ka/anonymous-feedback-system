@@ -1,5 +1,5 @@
 <?php
-function renderStatusSelector(string $current, int $id): void
+function renderStatusSelector(string $current, int | string $id): void
 {
     $statuses = [
         'new'      => 'New',

@@ -44,7 +44,7 @@ $selects  = $cfg['selects']    ?? [];
                     <label class="filter-label" for="<?= $sel['id'] ?>"><?= $sel['label'] ?></label>
                     <select id="<?= $sel['id'] ?>"
                         name="<?= $sel['id'] ?>"
-                        class="filter-select rounded-sm">
+                        class="filter-select rounded-sm text-capitalize">
                         <?php foreach ($sel['options'] as $val => $text): ?>
                             <option value="<?= $val ?>"
                                 <?= ($_GET[$sel['id']] ?? '') === $val ? 'selected' : '' ?>>

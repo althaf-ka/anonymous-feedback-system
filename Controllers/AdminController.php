@@ -7,14 +7,20 @@ namespace Controllers;
 use Core\Response;
 use Core\Validator;
 use Services\AuthService;
+use Services\CategoryService;
+use Services\FeedbackService;
 
 class AdminController
 {
   private AuthService $authService;
+  private FeedbackService $feedbackService;
+  private CategoryService $categoryService;
 
-  public function __construct(AuthService $authService)
+  public function __construct(AuthService $authService, FeedbackService $feedbackService, CategoryService $categoryService)
   {
     $this->authService = $authService;
+    $this->feedbackService = $feedbackService;
+    $this->categoryService = $categoryService;
   }
 
 
@@ -56,8 +62,18 @@ class AdminController
     require __DIR__ . "/../views/admin/dashboard.php";
   }
 
-  public function feedback(): void
+  public function showAdminFeedbackPage(): void
   {
+    $categories = $this->categoryService->getCategoriesForFeedback();
+
+    $filters = [];
+    $limit = 20;
+    $offset = 0;
+    $sort = 'recent';
+
+    $rows = $this->feedbackService->getFilteredFeedbacks($filters, $limit, $offset, $sort);
+    // error_log(print_r($rows, true));
+
     require __DIR__ . "/../views/admin/feedback.php";
   }
 
