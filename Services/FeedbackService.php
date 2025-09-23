@@ -50,4 +50,27 @@ class FeedbackService
 
         return $deleted;
     }
+
+    public function getPublicFeedback(string $id)
+    {
+        $row = $this->feedbackRepo->findPublicFeedbackById($id);
+        error_log(print_r($row, true));
+
+        if (!$row) {
+            throw new Exception("Feedback not found or not public.");
+        }
+
+        return $row;
+    }
+
+    public function getAdminFeedback(string $id): array
+    {
+        $row = $this->feedbackRepo->findAdminById($id);
+
+        if (!$row) {
+            throw new Exception("Feedback not found.");
+        }
+
+        return $row;
+    }
 }

@@ -3,13 +3,14 @@
 namespace Controllers;
 
 use Services\CategoryService;
+use Services\FeedbackService;
 use Services\UserService;
 
 class UserController
 {
     private CategoryService $categoryService;
 
-    public function __construct(CategoryService $categoryService, private UserService $userService)
+    public function __construct(CategoryService $categoryService, private UserService $userService, private FeedbackService $feedbackService)
     {
         $this->categoryService = $categoryService;
     }
@@ -35,6 +36,7 @@ class UserController
     public function viewFeedback(string $id): void
     {
         $feedbackId = $id;
+        $feedbackData = $this->feedbackService->getPublicFeedback($feedbackId);
         require __DIR__ . "/../views/user/view-feedback.php";
     }
 }

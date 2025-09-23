@@ -491,3 +491,10 @@
         font-size: 0.90rem;
     }
 }
+
+.official-response .resolved-date {
+    margin-top: 6px;
+    font-size: 0.9rem;
+    color: #16a34a;
+    font-weight: 500;
+}

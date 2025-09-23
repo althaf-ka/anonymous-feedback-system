@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Core\Response;
 use Core\Validator;
+use Exception;
 use Services\FeedbackService;
 
 class FeedbackController
@@ -88,6 +89,28 @@ class FeedbackController
         } catch (\Throwable $e) {
             error_log("Bulk delete error: " . $e->getMessage());
             Response::error("An internal server error occurred while deleting.", [], 500);
+        }
+    }
+
+    public function viewPublicFeedback(string $id): void
+    {
+        try {
+            $cleanId = trim($id);
+            $feedback = $this->feedbackService->getPublicFeedback($cleanId);
+            Response::success("Feedback loaded", [$feedback]);
+        } catch (Exception $e) {
+            Response::error($e->getMessage(), [], 404);
+        }
+    }
+
+    // Admin
+    public function viewAdmin(string $uuid): void
+    {
+        try {
+            $feedback = $this->feedbackService->getAdminFeedback($uuid);
+            Response::success("Feedback loaded", $feedback);
+        } catch (Exception $e) {
+            Response::error($e->getMessage(), [], 404);
         }
     }
 }

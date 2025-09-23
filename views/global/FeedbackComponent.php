@@ -20,7 +20,6 @@ class FeedbackComponent
         ob_start();
         $d = $this->data;
 
-        // Safe defaults
         $title       = $d['title'] ?? "Feedback System";
         $category    = $d['category'] ?? "";
         $status      = $d['status'];
@@ -32,6 +31,7 @@ class FeedbackComponent
         $isPublic    = $d['is-public'] ?? false;
         $contact     = $d['contact'] ?? null;
         $rating      = $d['rating'] ?? 0;
+        $categoryColor = $d['categoryColor'] ?? "#6B7280";
 ?>
 
         <!-- Header -->
@@ -39,14 +39,20 @@ class FeedbackComponent
             <div class="container">
                 <h1 class="section-title"><?= htmlspecialchars($title) ?></h1>
                 <div class="feedback-meta">
-                    <span class="meta-item rounded-sm category-indicator <?= strtolower($category) ?>">
+                    <span class="meta-item rounded-sm category-indicator"
+                        style="
+                            --category-color: <?= htmlspecialchars($categoryColor) ?>;
+                            background-color: <?= htmlspecialchars($categoryColor) ?>1A; 
+                            color: <?= htmlspecialchars($categoryColor) ?>;
+                            border: 1px solid <?= htmlspecialchars($categoryColor) ?>33; 
+                    ">
                         <?= htmlspecialchars($category) ?>
                     </span>
                     <span class="rounded-sm status-<?= strtolower($status) ?> meta-item status-element">
                         <?= htmlspecialchars(ucwords($status)) ?>
                     </span>
                     <span class="meta-item rounded-sm">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" ta['category_color']
                             stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 6v6l4 2" />
@@ -91,6 +97,13 @@ class FeedbackComponent
                                         </span>
                                     <?php endif; ?>
                                 </div>
+
+                                <?php if (!empty($d['resolved_at'])): ?>
+                                    <div class="resolved-date">
+                                        ✅ Resolved at: <?= htmlspecialchars(date("M j, Y g:i A", strtotime($d['resolved_at']))) ?>
+                                    </div>
+                                <?php endif; ?>
+
 
                                 <div class="card-content">
                                     <?php if ($this->isAdmin): ?>
@@ -143,7 +156,7 @@ class FeedbackComponent
                         <!-- Voting -->
                         <div class="vote-card rounded-sm">
                             <div class="vote-section">
-                                <?= $this->renderVoteSection($voteCount, (int)$feedbackId, $status, $isPublic, $userOptedPublic) ?>
+                                <?= $this->renderVoteSection($voteCount, $feedbackId, $status, $isPublic, $userOptedPublic) ?>
                             </div>
                         </div>
 
@@ -249,7 +262,7 @@ class FeedbackComponent
         return "<p>" . $stringWithPs . "</p>";
     }
 
-    private function renderVoteSection(int $voteCount, int $feedbackId, string $status, bool $isPublic, bool $userOptedPublic): string
+    private function renderVoteSection(int $voteCount, string $feedbackId, string $status, bool $isPublic, bool $userOptedPublic): string
     {
         // Case: not admin
         if (!$this->isAdmin) {
@@ -265,9 +278,8 @@ class FeedbackComponent
             HTML;
             }
 
-            $feedbackIdStr = htmlspecialchars((string)$feedbackId);
             return <<<HTML
-            <button class="vote-button" data-id="{$feedbackIdStr}">
+            <button class="vote-button" data-id="{$feedbackId}">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M7 10l5-5 5 5" />
                     <path d="M12 5v14" />
