@@ -78,7 +78,8 @@ class AdminController
 
   public function viewFeedback(string $id): void
   {
-    $feedbackId = $id;
+    $feedback = $this->feedbackService->getAdminFeedback($id);
+    error_log(print_r($feedback, true));
     require __DIR__ . "/../views/admin/view-feedback.php";
   }
 

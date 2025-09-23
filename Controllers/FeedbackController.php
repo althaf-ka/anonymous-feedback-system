@@ -92,25 +92,45 @@ class FeedbackController
         }
     }
 
-    public function viewPublicFeedback(string $id): void
+    public function setVisibility(): void
     {
+        $data = json_decode(file_get_contents('php://input'), true);
+        Validator::require(['id', 'isPublic'], $data);
+
+        $id = $data['id'];
+        $isPublic = (bool)$data['isPublic'];
+
         try {
-            $cleanId = trim($id);
-            $feedback = $this->feedbackService->getPublicFeedback($cleanId);
-            Response::success("Feedback loaded", [$feedback]);
-        } catch (Exception $e) {
-            Response::error($e->getMessage(), [], 404);
+            $feedback = $this->feedbackService->getAdminFeedback($id);
+
+            // Only allow public if user opted for public
+            if ($isPublic && empty($feedback['allow_public'])) {
+                Response::error("Cannot make feedback public because user opted out.", [], 403);
+                return;
+            }
+
+            $this->feedbackService->setPublicVisibility($id, $isPublic);
+            Response::success("Visibility updated successfully", ['isPublic' => $isPublic]);
+        } catch (\Throwable $e) {
+            error_log("Visibility update failed: " . $e->getMessage());
+            Response::error("Failed to update visibility. Please try again.", [], 500);
         }
     }
 
-    // Admin
-    public function viewAdmin(string $uuid): void
+    public function saveOfficialResponse(): void
     {
+        $data = json_decode(file_get_contents('php://input'), true);
+        Validator::require(['id', 'content'], $data);
+
+        $id = $data['id'];
+        $content = trim($data['content']);
+
         try {
-            $feedback = $this->feedbackService->getAdminFeedback($uuid);
-            Response::success("Feedback loaded", $feedback);
-        } catch (Exception $e) {
-            Response::error($e->getMessage(), [], 404);
+            $this->feedbackService->saveOfficialResponse($id, $content);
+            Response::success("Official response saved successfully", ['content' => $content, 'date' => date("Y-m-d H:i:s")]);
+        } catch (\Throwable $e) {
+            error_log("Official response save failed: " . $e->getMessage());
+            Response::error("Failed to save official response. Please try again.", [], 500);
         }
     }
 }

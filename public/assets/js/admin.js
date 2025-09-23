@@ -98,28 +98,25 @@ document.querySelectorAll(".visibility-toggle").forEach((toggle) => {
     const isPublic = this.checked;
 
     statusSpan.textContent = isPublic ? "Public" : "Private";
-
     statusSpan.style.opacity = "0.5";
 
     try {
-      // Send update to server
-      await fetch("/admin/feedback/set-visibility", {
+      const res = await fetch("/admin/feedback/set-visibility", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: this.dataset.id,
-          isPublic: isPublic,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: this.dataset.id, isPublic }),
       });
+      const json = await res.json();
+
+      if (json.success) showToast(json.message, "success");
+      else showToast(json.message, "error");
 
       statusSpan.style.opacity = "1";
-    } catch (error) {
+    } catch (err) {
       this.checked = !isPublic;
       statusSpan.textContent = !isPublic ? "Public" : "Private";
       statusSpan.style.opacity = "1";
-      console.error("Failed to update visibility:", error);
+      showToast("Failed to update visibility", "error");
     }
   });
 });
@@ -139,14 +136,28 @@ function toggleResponseForm(showForm) {
 
 function handleResponseSave(e) {
   e.preventDefault();
+  console.log("ACESSED IT");
 
   const form = e.target;
   const content = form.querySelector("textarea").value.trim();
+  const feedbackId = form.dataset.id;
 
-  // TODO: Replace this with a real AJAX request
-  // Example: fetch("/admin/feedback/save-response.php", { ... })
+  fetch("/admin/feedback/set-official-response", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: feedbackId, content }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (!data.success) throw new Error(data.message || "Failed to save response");
 
-  updateResponseUI(content, new Date());
+      updateResponseUI(content, new Date());
+      showToast(data.message || "Official response saved", "success");
+    })
+    .catch((err) => {
+      showToast(err.message, "error");
+      console.error(err);
+    });
 }
 
 function updateResponseUI(content, date) {

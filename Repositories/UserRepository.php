@@ -36,7 +36,7 @@ class UserRepository
         FROM feedbacks f
         JOIN categories c ON f.category_id = c.id
         LEFT JOIN feedback_votes v ON v.feedback_id = f.id
-        WHERE f.is_public = 1 AND f.status != 'resolved'
+        WHERE f.is_public = 1 AND f.status != 'resolved' AND f.allow_public = 1
         GROUP BY f.id
         ORDER BY f.created_at DESC
         LIMIT ?",

@@ -55,6 +55,8 @@ $router->post('/admin/delete/category', 'CategoryController@deleteCategory');
 $router->post('/admin/categories/add', 'CategoryController@createCategory');
 $router->post('/admin/category/delete', 'CategoryController@deleteCategory');
 $router->post('/admin/status/change', 'FeedbackController@changeStatus');
+$router->post('/admin/feedback/set-visibility', 'FeedbackController@setVisibility');
+$router->post('/admin/feedback/set-official-response', 'FeedbackController@saveOfficialResponse');
 
 
 $router->resolve();

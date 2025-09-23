@@ -73,4 +73,21 @@ class FeedbackService
 
         return $row;
     }
+
+    public function setPublicVisibility(string $id, bool $isPublic): bool
+    {
+        $updated = $this->feedbackRepo->updatePublicVisibility($id, $isPublic);
+
+        if (!$updated) {
+            throw new Exception("Failed to update visibility.");
+        }
+
+        return true;
+    }
+
+
+    public function saveOfficialResponse(string $id, string $content): bool
+    {
+        return $this->feedbackRepo->upsertOfficialResponse($id, $content);
+    }
 }

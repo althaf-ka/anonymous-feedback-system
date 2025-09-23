@@ -157,22 +157,77 @@ class FeedbackRepository
         $sql = "SELECT 
                 BIN_TO_UUID(f.id) AS id,
                 f.title,
-                f.description,
+                f.message AS description,
                 f.status,
                 f.allow_public,
                 f.is_public,
                 f.created_at,
+                f.resolved_at,
                 f.rating,
-                f.contact_email,
-                f.contact_phone,
+                f.contact_details,
                 c.name AS category_name,
+                c.color AS category_color,
                 (SELECT COUNT(*) FROM feedback_votes WHERE feedback_id = f.id) AS vote_count,
-                fr.response_text AS official_response_content,
-                fr.created_at AS official_response_date
+                fr.response AS official_response_content,
+                fr.last_updated AS official_response_date,
+                CASE
+                    WHEN TIMESTAMPDIFF(MINUTE, f.created_at, NOW()) < 60 
+                        THEN CONCAT(TIMESTAMPDIFF(MINUTE, f.created_at, NOW()), ' minutes ago')
+                    WHEN TIMESTAMPDIFF(HOUR, f.created_at, NOW()) < 24
+                        THEN CONCAT(TIMESTAMPDIFF(HOUR, f.created_at, NOW()), ' hours ago')
+                    ELSE CONCAT(TIMESTAMPDIFF(DAY, f.created_at, NOW()), ' days ago')
+                END AS feedback_date,
+                CASE
+                    WHEN fr.last_updated IS NULL THEN NULL
+                    WHEN TIMESTAMPDIFF(MINUTE, fr.last_updated, NOW()) < 60 
+                        THEN CONCAT(TIMESTAMPDIFF(MINUTE, fr.last_updated, NOW()), ' minutes ago')
+                    WHEN TIMESTAMPDIFF(HOUR, fr.last_updated, NOW()) < 24
+                        THEN CONCAT(TIMESTAMPDIFF(HOUR, fr.last_updated, NOW()), ' hours ago')
+                    ELSE CONCAT(TIMESTAMPDIFF(DAY, fr.last_updated, NOW()), ' days ago')
+                END AS response_date
             FROM feedbacks f
             JOIN categories c ON f.category_id = c.id
             LEFT JOIN feedback_responses fr ON fr.feedback_id = f.id
             WHERE f.id = UUID_TO_BIN(?)";
+
         return $this->db->fetchOne($sql, [$uuid]);
+    }
+
+    public function updatePublicVisibility(string $id, bool $isPublic): bool
+    {
+        return $this->db->query(
+            "UPDATE feedbacks SET is_public = ? WHERE id = UUID_TO_BIN(?)",
+            [$isPublic ? 1 : 0, $id]
+        );
+    }
+
+
+    public function upsertOfficialResponse(string $feedbackId, string $content): bool
+    {
+        $this->db->beginTransaction();
+
+        $exists = $this->db->fetchOne(
+            "SELECT BIN_TO_UUID(id) as id FROM feedback_responses WHERE feedback_id = UUID_TO_BIN(?)",
+            [$feedbackId]
+        );
+
+        if ($exists) {
+
+            $result = $this->db->query(
+                "UPDATE feedback_responses 
+                 SET response = ?, last_updated = NOW() 
+                 WHERE feedback_id = UUID_TO_BIN(?)",
+                [$content, $feedbackId]
+            );
+        } else {
+            $result = $this->db->query(
+                "INSERT INTO feedback_responses (feedback_id, response, last_updated)
+                 VALUES (UUID_TO_BIN(?), ?, NOW())",
+                [$feedbackId, $content]
+            );
+        }
+
+        $this->db->commit();
+        return $result;
     }
 }

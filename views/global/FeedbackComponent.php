@@ -28,7 +28,7 @@ class FeedbackComponent
         $voteCount   = $d['voteCount'] ?? 0;
         $feedbackId  = $d['feedbackId'] ?? 0;
         $userOptedPublic = $d["allow-public"];
-        $isPublic    = $d['is-public'] ?? false;
+        $isPublic    = $d['is_public'] ?? 0;
         $contact     = $d['contact'] ?? null;
         $rating      = $d['rating'] ?? 0;
         $categoryColor = $d['categoryColor'] ?? "#6B7280";
@@ -123,7 +123,7 @@ class FeedbackComponent
                                         <!-- FORM MODE -->
                                         <div id="official-response-form" style="display:none">
                                             <form id="official-response-form-el"
-                                                data-id="<?= (int)$feedbackId ?>"
+                                                data-id="<?= $feedbackId ?>"
                                                 class="response-form"
                                                 onsubmit="return handleResponseSave(event)">
                                                 <textarea name="officialResponse" rows="5" class="form-textarea"
@@ -169,7 +169,7 @@ class FeedbackComponent
 
                                     <?php if ($this->isAdmin): ?>
                                         <div class="detail-value">
-                                            <?= renderStatusSelector($status, 4) ?>
+                                            <?= renderStatusSelector($status, $feedbackId) ?>
                                         </div>
                                     <?php else: ?>
                                         <span class="detail-value sidebar-status <?= 'status-' . $status ?>">

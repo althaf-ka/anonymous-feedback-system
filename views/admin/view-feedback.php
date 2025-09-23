@@ -8,29 +8,27 @@ $headAssets = [
 ];
 
 $feedbackData = [
-    'id' => 123,
-    'title' => "Extended Library Hours During Exams",
-    'description' => "
-        The library should stay open 24/7 during exam periods to accommodate different study schedules and reduce overcrowding during peak hours. Many students prefer studying late at night or early in the morning, and the current limited hours create unnecessary stress during already challenging exam periods.
-        This would particularly benefit students with different sleep schedules, international students  adjusting to time zones, students with part-time jobs who can only study at night, and those who  find the library less crowded during off-peak hours.
-        The implementation could include additional security measures and maybe a reduced staff presence during overnight hours, but keeping the main study areas accessible would make a significant difference to student success.
-    ",
-    'category' => 'Academics',
-    'status' => 'resolved',
-    'priority' => 'High',
-    'is_public' => true,
-    'created_at' => '2025-01-10 14:30:00',
-    'voteCount' => 45,
-    'rating' => 4,
-    'contact' => 'student@example.com',
+    'feedbackId' => $feedback['id'] ?? 0,
+    'title' => $feedback['title'] ?? '',
+    'description' => $feedback['description'] ?? '',
+    'category' => $feedback['category_name'] ?? '',
+    'categoryColor' => $feedback['category_color'] ?? '#6B7280',
+    'status' => $feedback['status'] ?? 'new',
+    'is_public' => (bool)($feedback['is_public'] ?? false),
+    'allow-public' => (bool)($feedback['allow_public'] ?? false),
+    'created_at' => $feedback['created_at'] ?? null,
+    'resolved_at' => $feedback['resolved_at'] ?? null,
+    'voteCount' => (int)($feedback['vote_count'] ?? 0),
+    'rating' => (int)($feedback['rating'] ?? 0),
+    'contact' => $feedback['contact_details'] ?? null,
     'official_response' => [
-        'content' => "Thank you for this suggestion. We have implemented extended library hours during exam periods 
-                      starting this semester. The library will now be open 24/7 during the two weeks before final exams.",
-        'date' => '2025-01-11 09:00:00',
+        'content' => $feedback['official_response_content'] ?? '',
+        'date' => $feedback['official_response_date'] ?? null,
     ],
-    'allow-public' => true,
-    'is-public' => true,
+    'feedback_date' => $feedback['feedback_date'] ?? '',
+    'response_date' => $feedback['response_date'] ?? '',
 ];
+
 
 
 $feedback = new FeedbackComponent($feedbackData, true);
