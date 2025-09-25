@@ -136,7 +136,6 @@ function toggleResponseForm(showForm) {
 
 function handleResponseSave(e) {
   e.preventDefault();
-  console.log("ACESSED IT");
 
   const form = e.target;
   const content = form.querySelector("textarea").value.trim();

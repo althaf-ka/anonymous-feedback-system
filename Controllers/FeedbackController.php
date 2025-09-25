@@ -133,4 +133,22 @@ class FeedbackController
             Response::error("Failed to save official response. Please try again.", [], 500);
         }
     }
+
+    public function fetchPublicSuggestions(): void
+    {
+        $filters = [
+            'status'   => $_GET['status'] ?? null,
+            'category' => $_GET['category'] ?? null,
+            'search'   => $_GET['search'] ?? null,
+        ];
+        $sort   = $_GET['sort'] ?? 'votes';
+        $limit  = (int)($_GET['limit'] ?? 10);
+        $offset = (int)($_GET['offset'] ?? 0);
+
+
+        $resultData = $this->feedbackService->getPublicFilteredSuggestions($filters, $limit, $offset, $sort);
+        error_log(print_r($resultData, true));
+
+        Response::success('Suggestions fetched successfully', $resultData);
+    }
 }

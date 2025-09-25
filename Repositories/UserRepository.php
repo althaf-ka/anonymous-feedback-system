@@ -18,10 +18,10 @@ class UserRepository
         return $this->db->fetchAll(
             "SELECT 
             BIN_TO_UUID(f.id) AS id,
-            c.name AS category_name,
+            c.name AS category,
             c.color AS category_color,
             f.title,
-            f.message AS preview,
+            f.message,
             f.status,
             CASE
                 WHEN TIMESTAMPDIFF(MINUTE, f.created_at, NOW()) < 60 
@@ -31,7 +31,7 @@ class UserRepository
                 THEN CONCAT(TIMESTAMPDIFF(HOUR, f.created_at, NOW()), ' hours ago')
                 
                 ELSE CONCAT(TIMESTAMPDIFF(DAY, f.created_at, NOW()), ' days ago')
-            END AS date,
+            END AS created_at,
             COUNT(v.id) AS votes
         FROM feedbacks f
         JOIN categories c ON f.category_id = c.id
@@ -49,7 +49,7 @@ class UserRepository
         return $this->db->fetchAll(
             "SELECT 
                 BIN_TO_UUID(f.id) AS id,
-                c.name AS category_name,
+                c.name AS category,
                 c.color AS category_color,
                 f.title,
                 f.message AS preview,
@@ -62,7 +62,7 @@ class UserRepository
                     THEN CONCAT(TIMESTAMPDIFF(HOUR, f.created_at, NOW()), ' hours ago')
                 
                     ELSE CONCAT(TIMESTAMPDIFF(DAY, f.created_at, NOW()), ' days ago')
-                END AS date
+                END AS created_at
             FROM feedbacks f
             JOIN categories c ON f.category_id = c.id
             LEFT JOIN feedback_votes v ON v.feedback_id = f.id

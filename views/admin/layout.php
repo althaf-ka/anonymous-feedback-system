@@ -5,11 +5,10 @@ $title        = htmlspecialchars($title ?? 'Admin');
 $headerTitle  = "Admin";
 $isAdmin      = true;
 $headAssets = [
-    ...$headAssets,
+    ...$headAssets ?? [],
     '<link rel="stylesheet" href="/assets/css/components/sidebar.css">',
     '<link rel="stylesheet" href="/assets/css/components/status-selector.css">',
 ];
-
 
 
 if ($showHeader) {

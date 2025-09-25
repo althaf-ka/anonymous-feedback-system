@@ -230,4 +230,72 @@ class FeedbackRepository
         $this->db->commit();
         return $result;
     }
+
+
+
+    public function findPublicFiltered(array $filters, int $limit, int $offset, string $sort): array
+    {
+
+        $baseSql = "FROM feedbacks f
+                LEFT JOIN categories c ON f.category_id = c.id
+                LEFT JOIN feedback_votes v ON v.feedback_id = f.id
+                WHERE f.is_public = 1 AND f.allow_public = 1";
+
+        $params = [];
+
+
+        if (!empty($filters['status'])) {
+            $baseSql .= " AND f.status = ?";
+            $params[] = $filters['status'];
+        }
+
+        if (!empty($filters['category'])) {
+            $baseSql .= " AND c.id = UUID_TO_BIN(?)";
+            $params[] = $filters['category'];
+        }
+
+        if (!empty($filters['search'])) {
+            $baseSql .= " AND (f.title LIKE ? OR f.message LIKE ?)";
+            $searchTerm = '%' . $filters['search'] . '%';
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+        }
+
+
+        $countSql = "SELECT COUNT(DISTINCT f.id) " . $baseSql;
+        $total = (int)$this->db->fetchColumn($countSql, $params);
+
+
+        $dataSql = "SELECT
+                    BIN_TO_UUID(f.id) AS id,
+                    f.title,
+                    f.message,
+                    f.status,
+                    c.name AS category,
+                    c.color AS category_color,
+                    f.created_at,
+                    COUNT(v.id) AS votes
+                " . $baseSql;
+
+        $dataSql .= " GROUP BY f.id";
+
+        $sortMap = [
+            'recent' => 'f.created_at DESC',
+            'oldest' => 'f.created_at ASC',
+            'votes'  => 'votes DESC, f.created_at DESC',
+            'title'  => 'f.title ASC',
+        ];
+
+        $dataSql .= " ORDER BY " . ($sortMap[$sort] ?? $sortMap['votes']);
+
+        $dataSql .= " LIMIT ? OFFSET ?";
+        $dataParams = array_merge($params, [$limit, $offset]);
+
+        $feedbacks = $this->db->fetchAll($dataSql, $dataParams);
+
+        return [
+            'feedbacks' => $feedbacks,
+            'total' => $total
+        ];
+    }
 }

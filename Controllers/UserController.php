@@ -31,6 +31,24 @@ class UserController
 
     public function publicSuggestions(): void
     {
+        $categories = $this->categoryService->getCategoriesForFeedback();
+
+        $initialFilters = [
+            'status'   => '',
+            'category' => '',
+            'search'   => ''
+        ];
+        $initialSort   = 'votes';
+        $initialLimit  = 10;
+        $initialOffset = 0;
+
+        $initialDataFromServer = $this->feedbackService->getPublicFilteredSuggestions(
+            $initialFilters,
+            $initialLimit,
+            $initialOffset,
+            $initialSort
+        );
+
         require __DIR__ . '/../views/user/public-suggestions.php';
     }
     public function viewFeedback(string $id): void

@@ -3,6 +3,10 @@ ob_start();
 
 $title = $title ?? 'Feedback System';
 $headerTitle  = "Feedback System";
+$headAssets = [
+    ...$headAssets ?? [],
+    '<link rel="stylesheet" href="/assets/css/components/user-feedback-card.css">'
+];
 
 $isAdmin = false;
 

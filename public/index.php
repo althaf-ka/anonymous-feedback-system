@@ -37,6 +37,7 @@ $router->get('/', 'UserController@home');
 $router->get('/submit-feedback', 'UserController@showSubmitFeedback');
 $router->post('/submit-feedback', 'FeedbackController@handleSubmitFeedback');
 $router->get('/public-suggestions', 'UserController@publicSuggestions');
+$router->get('/api/public-suggestions', 'FeedbackController@fetchPublicSuggestions');
 $router->get('/feedback/{id}', 'UserController@viewFeedback');
 $router->post('/feedback/vote', 'VoteController@castVote');
 

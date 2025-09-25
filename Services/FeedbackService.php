@@ -54,7 +54,6 @@ class FeedbackService
     public function getPublicFeedback(string $id)
     {
         $row = $this->feedbackRepo->findPublicFeedbackById($id);
-        error_log(print_r($row, true));
 
         if (!$row) {
             throw new Exception("Feedback not found or not public.");
@@ -89,5 +88,10 @@ class FeedbackService
     public function saveOfficialResponse(string $id, string $content): bool
     {
         return $this->feedbackRepo->upsertOfficialResponse($id, $content);
+    }
+
+    public function getPublicFilteredSuggestions(array $filters, int $limit, int $offset, string $sort): array
+    {
+        return $this->feedbackRepo->findPublicFiltered($filters, $limit, $offset, $sort);
     }
 }
