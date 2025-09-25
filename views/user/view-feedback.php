@@ -33,29 +33,7 @@ $content = $feedback->render();
 include __DIR__ . '/layout.php';
 ?>
 
-<!-- JS should be outside PHP -->
 <script>
-    function handleVote(button, feedbackId) {
-        const voteCount = button.querySelector('.vote-count');
-        let currentVotes = parseInt(voteCount.textContent);
-        let isVoted = button.classList.contains('voted');
-
-        if (isVoted) {
-            currentVotes--;
-            button.classList.remove('voted');
-            showToast('Vote removed', 'info');
-        } else {
-            currentVotes++;
-            button.classList.add('voted');
-            showToast('Vote added!', 'success');
-        }
-
-        voteCount.textContent = currentVotes;
-
-        // TODO: AJAX call
-        // updateVoteInDatabase(feedbackId, isVoted ? 'remove' : 'add');
-    }
-
     function copyLink() {
         const url = window.location.href;
 

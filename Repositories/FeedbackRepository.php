@@ -82,7 +82,6 @@ class FeedbackRepository
 
         $feedbacks = $this->db->fetchAll($dataSql, $dataParams);
 
-        // --- 4. Return the new, combined structure ---
         return [
             'feedbacks' => $feedbacks,
             'total' => $total
@@ -91,12 +90,16 @@ class FeedbackRepository
 
     public function updateStatus(string $id, string $status): bool
     {
-        return $this->db->query(
-            "UPDATE feedbacks 
-         SET status = ? 
-         WHERE id = UUID_TO_BIN(?)",
-            [$status, $id]
-        );
+        $sql = "
+        UPDATE feedbacks 
+        SET 
+            status = ?,
+            resolved_at = CASE WHEN ? = 'resolved' THEN NOW() ELSE NULL END
+        WHERE 
+            id = UUID_TO_BIN(?)
+    ";
+
+        return $this->db->query($sql, [$status, $status, $id]);
     }
 
     public function deleteByIds(array $uuids): int

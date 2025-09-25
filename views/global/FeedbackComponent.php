@@ -98,7 +98,7 @@ class FeedbackComponent
                                     <?php endif; ?>
                                 </div>
 
-                                <?php if (!empty($d['resolved_at'])): ?>
+                                <?php if (!empty($d['resolved_at']) && ($d['status'] ?? '') === 'resolved'): ?>
                                     <div class="resolved-date">
                                         ✅ Resolved at: <?= htmlspecialchars(date("M j, Y g:i A", strtotime($d['resolved_at']))) ?>
                                     </div>

@@ -147,7 +147,6 @@ class FeedbackController
 
 
         $resultData = $this->feedbackService->getPublicFilteredSuggestions($filters, $limit, $offset, $sort);
-        error_log(print_r($resultData, true));
 
         Response::success('Suggestions fetched successfully', $resultData);
     }

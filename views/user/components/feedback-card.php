@@ -8,13 +8,13 @@ function renderFeedbackCard($data)
             data-status="<?= htmlspecialchars($data['status']) ?>">
 
             <div class="card-left">
-                <div class="category-indicator" style="--indicator-color: <?= htmlspecialchars($data['category_color']) ?>;"></div>
+                <div class="feedback-card_category-indicator" style="--indicator-color: <?= htmlspecialchars($data['category_color']) ?>;"></div>
                 <div class="card-content">
                     <div class="card-meta">
                         <span class="category-name"><?= htmlspecialchars($data['category']) ?></span>
                         <span class="date-posted">
                             <?php if (strtolower($data['status']) === 'resolved'): ?>
-                                Resolved <?= htmlspecialchars($data['created_at']) ?>
+                                Resolved <?= htmlspecialchars($data['resolved_at']) ?>
                             <?php else: ?>
                                 <?= htmlspecialchars($data['created_at']) ?>
                             <?php endif; ?>

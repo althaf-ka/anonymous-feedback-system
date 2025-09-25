@@ -102,16 +102,6 @@ try {
         CREATE TABLE IF NOT EXISTS feedback_responses (
             id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
             feedback_id BINARY(16) NOT NULL,
-            response VARCHAR(1000) NOT NULL,
-            last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY (feedback_id) REFERENCES feedbacks(id) ON DELETE CASCADE
-        )
-    ");
-
-    $db->query("
-        CREATE TABLE IF NOT EXISTS feedback_responses (
-            id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
-            feedback_id BINARY(16) NOT NULL,
             response TEXT NOT NULL,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             UNIQUE KEY `uniq_feedback_id` (`feedback_id`),
