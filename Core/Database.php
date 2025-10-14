@@ -82,7 +82,7 @@ class Database
 
         $stmt->execute();
 
-        if (str_starts_with(strtoupper($sql), "SELECT")) {
+        if (str_starts_with(strtoupper(trim($sql)), "SELECT")) {
             return $stmt->get_result();
         }
 

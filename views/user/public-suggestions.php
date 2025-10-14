@@ -1,5 +1,9 @@
 <?php
-$title = "Public Suggestions | Feedback System";
+$seo = [
+    'title'       => 'Public Suggestions | Anonymous Feedback System',
+    'description' => 'Browse, search, and filter through all public feedback and suggestions raised by the community. Upvote ideas you support and see their current status.'
+];
+
 $headAssets = [
     '<link rel="stylesheet" href="/assets/css/pages/public-suggestions.css">'
 ];

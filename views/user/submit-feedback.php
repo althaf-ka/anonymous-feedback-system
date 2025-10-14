@@ -1,5 +1,9 @@
 <?php
-$title = "Submit Feedback | Feedback System";
+$seo = [
+    'title'       => 'Submit Your Feedback | Anonymous Feedback System',
+    'description' => 'Have an idea or suggestion? Use our simple and secure form to submit your anonymous feedback directly to our team.'
+];
+
 $headAssets = [
     '<link rel="stylesheet" href="assets/css/pages/submit-feedback.css">'
 ];

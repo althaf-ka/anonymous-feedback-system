@@ -1,5 +1,8 @@
 <?php
-$title = "Feedback | Admin Panel";
+$seo = [
+    'title' => 'All Feedback | Admin Panel',
+    'description' => 'View, manage, filter, and search all feedback submissions in the admin panel.'
+];
 $headAssets[] = '<link rel="stylesheet" href="/assets/css/pages/feedback.css">';
 $showSidebar = $showHeader = true;
 

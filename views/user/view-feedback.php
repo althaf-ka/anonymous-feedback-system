@@ -1,8 +1,13 @@
 <?php
 
 use views\global\FeedbackComponent;
+use Helpers\StringHelper;
 
-$title = "Extended Library Hours During Exams | Feedback System";
+$pageTitle = StringHelper::truncate($feedbackData['title']);
+$seo = [
+    'title'       => $pageTitle . ' | Anonymous Feedback System',
+    'url'         => 'https://' . $_SERVER['HTTP_HOST'] . '/feedback/' . $feedbackData['id'],
+];
 $headAssets = [
     '<link rel="stylesheet" href="/assets/css/components/feedback-component.css">',
 ];

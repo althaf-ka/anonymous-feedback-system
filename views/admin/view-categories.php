@@ -1,5 +1,8 @@
 <?php
-$title = "Categories | Admin Panel";
+$seo = [
+    'title' => 'Manage Categories | Admin Panel',
+    'description' => 'Add, edit, and delete feedback categories for the system.'
+];
 $headAssets[] = '<link rel="stylesheet" href="/assets/css/pages/view-categories.css">';
 $showSidebar = $showHeader = true;
 

@@ -1,11 +1,22 @@
 <?php
 
-use views\global\FeedbackComponent;
+/** @var array $feedback */
 
-$title = "Feedback Details | Admin";
+use views\global\FeedbackComponent;
+use Helpers\StringHelper;
+
+
+$pageTitle = StringHelper::truncate($feedback['title']);
+$seo = [
+    'title' => $pageTitle . ' | Anonymous Feedback System',
+];
+
 $headAssets = [
     '<link rel="stylesheet" href="/assets/css/components/feedback-component.css">',
 ];
+
+$showHeader  = false;
+$showSidebar = false;
 
 $feedbackData = [
     'feedbackId' => $feedback['id'] ?? 0,

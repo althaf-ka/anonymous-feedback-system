@@ -95,9 +95,9 @@ document.addEventListener("click", async (e) => {
 document.querySelectorAll(".visibility-toggle").forEach((toggle) => {
   toggle.addEventListener("change", async function () {
     const statusSpan = this.closest(".visibility-control").querySelector(".visibility-status");
+    const badge = document.querySelector(".vote-section .status-badge");
     const isPublic = this.checked;
 
-    statusSpan.textContent = isPublic ? "Public" : "Private";
     statusSpan.style.opacity = "0.5";
 
     try {
@@ -106,17 +106,42 @@ document.querySelectorAll(".visibility-toggle").forEach((toggle) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: this.dataset.id, isPublic }),
       });
+
       const json = await res.json();
 
-      if (json.success) showToast(json.message, "success");
-      else showToast(json.message, "error");
+      if (json.success) {
+        statusSpan.textContent = isPublic ? "Public" : "Private";
 
-      statusSpan.style.opacity = "1";
+        if (badge) {
+          if (isPublic) {
+            badge.classList.remove("status-review");
+            badge.classList.add("status-resolved");
+            badge.innerHTML = "Approved to public";
+          } else {
+            badge.classList.remove("status-resolved");
+            badge.classList.add("status-review");
+            badge.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width='18' height='18'>
+                <rect width='18' height='18' fill="none"/>
+                <circle cx="128" cy="136" r="88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                <line x1="128" y1="136" x2="168" y2="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                <line x1="104" y1="16" x2="152" y2="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+              </svg>
+              Pending Approval
+            `;
+          }
+        }
+
+        showToast(json.message, "success");
+      } else {
+        this.checked = !isPublic;
+        showToast(json.message, "error");
+      }
     } catch (err) {
       this.checked = !isPublic;
-      statusSpan.textContent = !isPublic ? "Public" : "Private";
-      statusSpan.style.opacity = "1";
       showToast("Failed to update visibility", "error");
+    } finally {
+      statusSpan.style.opacity = "1";
     }
   });
 });
@@ -225,3 +250,48 @@ document.addEventListener("click", function (e) {
     closeModal(e.target.id);
   }
 });
+
+// Admin dashboard export button script
+const exportBtn = document.getElementById("export-data-btn");
+if (exportBtn) {
+  exportBtn.addEventListener("click", async () => {
+    const contentDiv = exportBtn.querySelector(".action-content");
+    const originalText = contentDiv.innerHTML;
+
+    exportBtn.disabled = true;
+    contentDiv.innerHTML = `<span class="loading-spinner"></span> Exporting...`;
+
+    try {
+      const response = await fetch("/admin/export");
+
+      if (!response.ok) {
+        throw new Error("Server responded with an error.");
+      }
+
+      const disposition = response.headers.get("content-disposition");
+      let filename = "feedback-export.csv";
+      if (disposition && disposition.includes("attachment")) {
+        const match = disposition.match(/filename="?([^"]+)"?/);
+        if (match) filename = match[1];
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      showToast("Export completed successfully!", "success");
+    } catch (error) {
+      console.error("Export failed:", error);
+      showToast("Export failed. Please try again later.", "error");
+    } finally {
+      exportBtn.disabled = false;
+      contentDiv.innerHTML = originalText;
+    }
+  });
+}

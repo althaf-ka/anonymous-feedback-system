@@ -1,7 +1,6 @@
 <?php
 ob_start();
 
-$title        = htmlspecialchars($title ?? 'Admin');
 $headerTitle  = "Admin";
 $isAdmin      = true;
 $headAssets = [

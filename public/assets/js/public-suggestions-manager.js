@@ -211,11 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showEmptyState() {
       this.container.innerHTML = `
     <div class="empty-state">
-      <div class="empty-state__icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor">
-            <path d="M228.24,219.76l-54.2-54.2a88.1,88.1,0,1,0-8.48,8.48l54.2,54.2a6,6,0,0,0,8.48-8.48ZM42,112a76,76,0,1,1,76,76A76.08,76.08,0,0,1,42,112Z"></path>
-        </svg>
-      </div>
       <h3 class="empty-state__title">No Suggestions Found</h3>
       <p class="empty-state__message">Try adjusting your search or filter criteria to find what you're looking for.</p>
     </div>`;

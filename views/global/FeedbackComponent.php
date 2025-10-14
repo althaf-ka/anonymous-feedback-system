@@ -39,7 +39,7 @@ class FeedbackComponent
             <div class="container">
                 <h1 class="section-title"><?= htmlspecialchars($title) ?></h1>
                 <div class="feedback-meta">
-                    <span class="meta-item rounded-sm category-indicator"
+                    <span class="meta-item rounded-sm category-indicator text-capitalize"
                         style="
                             --category-color: <?= htmlspecialchars($categoryColor) ?>;
                             background-color: <?= htmlspecialchars($categoryColor) ?>1A; 

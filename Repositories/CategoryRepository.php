@@ -87,4 +87,19 @@ class CategoryRepository
             "SELECT COUNT(*) FROM categories"
         );
     }
+
+    public function getTopCategories(int $limit = 4): array
+    {
+        $sql = "SELECT 
+                c.name, 
+                c.color, 
+                COUNT(f.id) AS feedback_count
+            FROM categories c
+            JOIN feedbacks f ON c.id = f.category_id
+            GROUP BY c.id, c.name, c.color
+            ORDER BY feedback_count DESC
+            LIMIT ?
+        ";
+        return $this->db->fetchAll($sql, [$limit]);
+    }
 }

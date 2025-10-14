@@ -11,16 +11,16 @@ class AuthMiddleware
         $uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
         if (str_starts_with($uri, '/admin') && $uri !== '/admin/login') {
-            session_start();
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
 
             if (!isset($_SESSION['admin'])) {
-                $acceptsJson = isset($_SERVER['HTTP_ACCEPT']) &&
-                    str_contains($_SERVER['HTTP_ACCEPT'], 'application/json');
+                $isApiRequest = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                    strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
-                if ($acceptsJson) {
-                    Response::error("Unauthorized. Please login first", [], 401);
-                    header("Location: /admin/login");
-                    exit;
+                if ($isApiRequest) {
+                    Response::error("Unauthorized. Your session may have expired.", [], 401);
                 } else {
                     header("Location: /admin/login");
                     exit;

@@ -234,8 +234,6 @@ class FeedbackRepository
         return $result;
     }
 
-
-
     public function findPublicFiltered(array $filters, int $limit, int $offset, string $sort): array
     {
 
@@ -300,5 +298,34 @@ class FeedbackRepository
             'feedbacks' => $feedbacks,
             'total' => $total
         ];
+    }
+
+    public function countTotalFeedback(): int
+    {
+        return (int) $this->db->fetchColumn("SELECT COUNT(id) FROM feedbacks");
+    }
+
+    public function countPendingFeedback(): int
+    {
+        return (int) $this->db->fetchColumn("SELECT COUNT(id) FROM feedbacks WHERE status = 'new' OR status = 'review'");
+    }
+
+    public function countFeedbackByStatus(string $status): int
+    {
+        return (int) $this->db->fetchColumn("SELECT COUNT(id) FROM feedbacks WHERE status = ?", [$status]);
+    }
+
+    public function getRecentFeedbackActivity(int $limit = 5): array
+    {
+        $sql = "SELECT 
+                f.title, 
+                f.created_at,
+                c.name AS category_name
+            FROM feedbacks f
+            LEFT JOIN categories c ON f.category_id = c.id
+            ORDER BY f.created_at DESC
+            LIMIT ?
+        ";
+        return $this->db->fetchAll($sql, [$limit]);
     }
 }

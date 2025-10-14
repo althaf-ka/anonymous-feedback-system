@@ -330,7 +330,6 @@
     }
 
     .vote-button {
-        flex-direction: row;
         padding: 0.5rem 0.75rem;
         min-width: auto;
         gap: 0.5rem;

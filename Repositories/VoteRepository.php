@@ -30,4 +30,12 @@ class VoteRepository
         ";
         return (int) $this->db->query($sql, [$feedbackId]);
     }
+
+    public function countActiveUsers(int $days = 30): int
+    {
+        $sql = "SELECT COUNT(DISTINCT ip_address) 
+                FROM feedback_votes 
+                WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)";
+        return (int) $this->db->fetchColumn($sql, [$days]);
+    }
 }

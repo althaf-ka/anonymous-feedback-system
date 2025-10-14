@@ -1,6 +1,10 @@
 <?php
 
-$title = "Login | Admin Panel";
+$seo = [
+    'title' => 'Admin Login | Anonymous Feedback System',
+    'description' => 'Log in to the administrator dashboard to manage feedback and categories.'
+];
+
 $headAssets = [
     '<link rel="stylesheet" href="/assets/css/pages/login.css">'
 ];

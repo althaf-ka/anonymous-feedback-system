@@ -11,7 +11,7 @@ class Validator
         $errors = [];
 
         foreach ($fields as $field) {
-            if (empty($data[$field])) {
+            if (!array_key_exists($field, $data) || $data[$field] === null) {
                 $errors[$field] = ucfirst($field) . " is required";
             }
         }

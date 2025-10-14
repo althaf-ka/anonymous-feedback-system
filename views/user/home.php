@@ -1,5 +1,8 @@
 <?php
-$title = "Feedback System";
+$seo = [
+    'title'       => 'Anonymous Feedback System | Share Your Ideas',
+    'description' => 'Welcome to our platform for anonymous feedback. Share your suggestions, upvote popular ideas, and help us improve our community together.'
+];
 
 ob_start();
 ?>

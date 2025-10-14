@@ -365,6 +365,7 @@
     font-weight: 600;
     padding: 0.25rem 0.5rem;
     margin-top: 0.25rem;
+    transition: all 0.3s ease;
 }
 
 .vote-card {
@@ -439,27 +440,61 @@
     }
 
     .official-response {
-        border-left: none !important;
-        border-radius: 0;
-        margin-top: 1rem;
+        border-left: 3px solid #3B82F6;
+        margin-top: 1.5rem;
+        background: rgba(59, 130, 246, 0.05);
+        padding: 1rem 1rem 1.25rem 1rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
 
     .official-response .card-header {
-        background: linear-gradient(135deg, #3B82F6, #2563EB);
-        color: white;
-        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        background: rgba(59, 130, 246, 0.08);
+        padding: 0.75rem 1rem;
     }
 
-    .official-response .official-badge {
-        color: white;
+    .official-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        color: #3B82F6;
+        font-size: 0.95rem;
     }
 
-    .official-response .official-badge svg {
-        fill: white;
+    .official-badge svg {
+        width: 18px;
+        height: 18px;
+        fill: #3B82F6;
     }
 
-    .official-response .response-date {
-        color: rgba(255, 255, 255, 0.8);
+    .response-date {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+    }
+
+    .official-response .card-content {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        padding: 0.75rem 1rem 1rem 1rem;
+    }
+
+    .no-response {
+        font-style: italic;
+        color: #555;
+        margin-top: 4px;
+    }
+
+    .resolved-date {
+        font-size: 0.9rem;
+        color: #16a34a;
+        font-weight: 500;
+        padding: 0.5rem 1rem 0 1rem;
+        margin-top: 0.75rem;
     }
 }
 
@@ -493,7 +528,7 @@
 }
 
 .official-response .resolved-date {
-    margin-top: 6px;
+    margin-top: 16px;
     font-size: 0.9rem;
     color: #16a34a;
     font-weight: 500;

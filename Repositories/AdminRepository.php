@@ -27,4 +27,27 @@ class AdminRepository
             [$email, $password]
         );
     }
+
+    public function getAllForExport(): array
+    {
+        $sql = "SELECT 
+            BIN_TO_UUID(f.id) AS id,
+            f.title,
+            f.message,
+            f.status,
+            c.name AS category,
+            f.allow_public,
+            f.is_public,
+            f.contact_details,
+            f.rating,
+            f.created_at,
+            COUNT(v.id) AS votes  
+        FROM feedbacks f
+        LEFT JOIN categories c ON f.category_id = c.id
+        LEFT JOIN feedback_votes v ON v.feedback_id = f.id
+        GROUP BY f.id, c.name 
+        ORDER BY f.created_at DESC
+    ";
+        return $this->db->fetchAll($sql, []);
+    }
 }

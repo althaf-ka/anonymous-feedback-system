@@ -10,7 +10,7 @@
                     </button>
                 <?php endif; ?>
 
-                <a href="/" class="header-logo">
+                <a href="<?= !empty($isAdmin) ? '/admin/dashboard' : '/' ?>" class="header-logo">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
                     </svg>
@@ -19,9 +19,7 @@
             </div>
 
             <div class="header-actions">
-                <?php if (!empty($isAdmin)): ?>
-                    <a href="/logout" class="btn btn-primary header-btn">Logout</a>
-                <?php else: ?>
+                <?php if (empty($isAdmin)): ?>
                     <a href="/submit-feedback" class="btn btn-primary header-btn">Submit Feedback</a>
                 <?php endif; ?>
             </div>

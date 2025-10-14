@@ -6,6 +6,7 @@ namespace Controllers;
 
 use Core\Response;
 use Core\Validator;
+use Services\AdminService;
 use Services\AuthService;
 use Services\CategoryService;
 use Services\FeedbackService;
@@ -15,12 +16,14 @@ class AdminController
   private AuthService $authService;
   private FeedbackService $feedbackService;
   private CategoryService $categoryService;
+  private AdminService $adminService;
 
-  public function __construct(AuthService $authService, FeedbackService $feedbackService, CategoryService $categoryService)
+  public function __construct(AuthService $authService, FeedbackService $feedbackService, CategoryService $categoryService, AdminService $adminService)
   {
     $this->authService = $authService;
     $this->feedbackService = $feedbackService;
     $this->categoryService = $categoryService;
+    $this->adminService = $adminService;
   }
 
 
@@ -59,6 +62,8 @@ class AdminController
 
   public function dashboard(): void
   {
+    $dashboardData = $this->adminService->getDashboardData();
+
     require __DIR__ . "/../views/admin/dashboard.php";
   }
 
@@ -67,6 +72,11 @@ class AdminController
     $categories = $this->categoryService->getCategoriesForFeedback();
 
     $filters = [];
+
+    if (!empty($_GET['status'])) {
+      $filters['status'] = $_GET['status'];
+    }
+
     $limit = 20;
     $offset = 0;
     $sort = 'recent';
@@ -79,7 +89,6 @@ class AdminController
   public function viewFeedback(string $id): void
   {
     $feedback = $this->feedbackService->getAdminFeedback($id);
-    error_log(print_r($feedback, true));
     require __DIR__ . "/../views/admin/view-feedback.php";
   }
 
@@ -113,6 +122,54 @@ class AdminController
     session_destroy();
     session_regenerate_id(true);
     header('Location: /admin/login');
+    exit;
+  }
+
+  public function exportFeedback(): void
+  {
+
+    $allFeedback = $this->adminService->getFeedbackForExport();
+
+    $filename = "feedback-export-" . date('Y-m-d') . ".csv";
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+    $handle = fopen('php://output', 'w');
+
+    $header = [
+      'ID',
+      'Title',
+      'Message',
+      'Status',
+      'Category',
+      'Votes',
+      'User Allowed Public',
+      'Is Public',
+      'Contact',
+      'Rating',
+      'Created At'
+    ];
+    fputcsv($handle, $header);
+
+    foreach ($allFeedback as $row) {
+      $vote_display = $row['allow_public'] ? $row['votes'] : '–';
+
+      fputcsv($handle, [
+        $row['id'],
+        $row['title'],
+        $row['message'],
+        $row['status'],
+        $row['category'],
+        $vote_display,
+        $row['allow_public'] ? 'Yes' : 'No',
+        $row['is_public'] ? 'Yes' : 'No',
+        $row['contact_details'],
+        $row['rating'],
+        $row['created_at']
+      ]);
+    }
+
+    fclose($handle);
     exit;
   }
 }
