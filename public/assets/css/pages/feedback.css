@@ -146,3 +146,10 @@
     margin-bottom: 0.825rem;
     border-bottom: 2px solid var(--color-border);
 }
+
+.no-feedback-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted, #666);
+    font-size: 1.1rem;
+}

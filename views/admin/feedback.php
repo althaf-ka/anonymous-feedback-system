@@ -50,48 +50,49 @@ ob_start();
         </div>
 
 
-        <div class="table-wrapper">
-            <div role="grid" class="feedback-table rounded-sm">
-                <div role="row" class="table-header">
-                    <div role="columnheader" class="cell checkbox-cell"></div>
-                    <div role="columnheader" class="cell">Subject</div>
-                    <div role="columnheader" class="cell">Category</div>
-                    <div role="columnheader" class="cell">Time</div>
-                    <div role="columnheader" class="cell votes-cell">Votes</div>
-                    <div role="columnheader" class="cell status-cell">Status</div>
-                </div>
+        <?php if (empty($rows['feedbacks'])): ?>
+            <div class="no-feedback-message">
+                <p>No feedback has been found.</p>
+            </div>
+        <?php else: ?>
+            <div class="table-wrapper">
+                <div role="grid" class="feedback-table rounded-sm">
+                    <div role="row" class="table-header">
+                        <div role="columnheader" class="cell checkbox-cell"></div>
+                        <div role="columnheader" class="cell">Subject</div>
+                        <div role="columnheader" class="cell">Category</div>
+                        <div role="columnheader" class="cell">Time</div>
+                        <div role="columnheader" class="cell votes-cell">Votes</div>
+                        <div role="columnheader" class="cell status-cell">Status</div>
+                    </div>
 
-                <div role="rowgroup" class="table-body">
-                    <?php if (empty($rows['feedbacks'])): ?>
-                        <div class="table-message-state">
-                            <p>No feedback has been submitted yet.</p>
-                        </div>
-                    <?php endif; ?>
-                    <?php foreach ($rows['feedbacks'] as $fb): ?>
-                        <div role="row" class="table-row">
-                            <div role="gridcell" class="cell checkbox-cell">
-                                <input type="checkbox" class="row-cb" name="ids[]" value="<?= $fb['id'] ?>" onclick="event.stopPropagation()">
+                    <div role="rowgroup" class="table-body">
+                        <?php foreach ($rows['feedbacks'] as $fb): ?>
+                            <div role="row" class="table-row">
+                                <div role="gridcell" class="cell checkbox-cell">
+                                    <input type="checkbox" class="row-cb" name="ids[]" value="<?= $fb['id'] ?>" onclick="event.stopPropagation()">
+                                </div>
+                                <a href="/admin/feedback/<?= $fb['id'] ?>" class="row-link" data-id="<?= $fb['id'] ?>">
+                                    <div role="gridcell" class="cell"><?= htmlspecialchars($fb['title']) ?></div>
+                                    <div role="gridcell" class="cell text-capitalize"><?= htmlspecialchars($fb['cat']) ?></div>
+                                    <div role="gridcell" class="cell time-cell"><?= htmlspecialchars($fb['created_at']) ?></div>
+                                    <div role="gridcell" class="cell votes-cell"><?= $fb['allow_public'] ? $fb['votes'] : '–' ?></div>
+                                </a>
+                                <div role="gridcell" class="cell status-cell">
+                                    <?php renderStatusSelector($fb['status'], $fb['id']); ?>
+                                </div>
                             </div>
-                            <a href="/admin/feedback/<?= $fb['id'] ?>" class="row-link" data-id="<?= $fb['id'] ?>">
-                                <div role="gridcell" class="cell"><?= htmlspecialchars($fb['title']) ?></div>
-                                <div role="gridcell" class="cell text-capitalize"><?= htmlspecialchars($fb['cat']) ?></div>
-                                <div role="gridcell" class="cell time-cell"><?= htmlspecialchars($fb['created_at']) ?></div>
-                                <div role="gridcell" class="cell votes-cell"><?= $fb['allow_public'] ? $fb['votes'] : '–' ?></div>
-                            </a>
-                            <div role="gridcell" class="cell status-cell">
-                                <?php renderStatusSelector($fb['status'], $fb['id']); ?>
-                            </div>
-                        </div>
-                    <?php endforeach ?>
+                        <?php endforeach ?>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <button type="submit" name="action" value="delete" class="bulk-delete-btn rounded-sm">
+                Delete Selected
+            </button>
+        <?php endif; ?>
 
         <div id="feedback-error-container"></div>
-
-        <button type="submit" name="action" value="delete" class="bulk-delete-btn rounded-sm">
-            Delete Selected
-        </button>
     </form>
 </section>
 
