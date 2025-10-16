@@ -84,7 +84,7 @@ ob_start();
                                 <span class="label-required">*</span>
                             </label>
                             <div class="select-wrapper">
-                                <select id="category" name="category" class="form-select" required>
+                                <select id="category" name="category" class="form-select text-capitalize" required>
                                     <option value="">Select a category</option>
                                     <?php foreach ($categories as $cat): ?>
                                         <option value="<?= htmlspecialchars($cat['id']) ?>">

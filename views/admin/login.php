@@ -18,6 +18,13 @@ ob_start();
             <h1 class="login-title">Admin Login</h1>
         </div>
 
+        <div class="demo-credentials">
+            <p><strong>Demo Account:</strong></p>
+            <p>Email: <code>admin@gmail.com</code></p>
+            <p>Password: <code>admin</code></p>
+        </div>
+
+
         <form method="POST" class="login-form">
             <div class="form-fields-login">
                 <div class="form-group">
