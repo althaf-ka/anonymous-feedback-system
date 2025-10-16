@@ -87,7 +87,7 @@ try {
 
     $db->query("
         CREATE TABLE IF NOT EXISTS feedback_votes (
-            id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+            id INT AUTO_INCREMENT PRIMARY KEY,
             feedback_id BINARY(16) NOT NULL,
             cookie_hash CHAR(64) NOT NULL,
             ip_address VARCHAR(45) NOT NULL,
@@ -100,7 +100,7 @@ try {
 
     $db->query("
         CREATE TABLE IF NOT EXISTS feedback_responses (
-            id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+            id INT AUTO_INCREMENT PRIMARY KEY,
             feedback_id BINARY(16) NOT NULL,
             response TEXT NOT NULL,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
