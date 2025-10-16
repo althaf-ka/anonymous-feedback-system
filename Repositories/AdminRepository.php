@@ -31,7 +31,7 @@ class AdminRepository
     public function getAllForExport(): array
     {
         $sql = "SELECT 
-            BIN_TO_UUID(f.id) AS id,
+            f.id AS id,
             f.title,
             f.message,
             f.status,
@@ -47,7 +47,7 @@ class AdminRepository
         LEFT JOIN feedback_votes v ON v.feedback_id = f.id
         GROUP BY f.id, c.name 
         ORDER BY f.created_at DESC
-    ";
+        ";
         return $this->db->fetchAll($sql, []);
     }
 }

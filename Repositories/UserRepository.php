@@ -17,7 +17,7 @@ class UserRepository
     {
         return $this->db->fetchAll(
             "SELECT 
-            BIN_TO_UUID(f.id) AS id,
+            f.id AS id,
             c.name AS category,
             c.color AS category_color,
             f.title,
@@ -48,7 +48,7 @@ class UserRepository
     {
         return $this->db->fetchAll(
             "SELECT 
-            BIN_TO_UUID(f.id) AS id,
+            f.id AS id,
             c.name AS category,
             c.color AS category_color,
             f.title,

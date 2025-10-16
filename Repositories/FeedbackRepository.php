@@ -17,7 +17,7 @@ class FeedbackRepository
     {
         return $this->db->query(
             "INSERT INTO feedbacks (title, message, category_id, allow_public, rating, contact_details) 
-             VALUES (?, ?, UUID_TO_BIN(?), ?, ?, ?)",
+             VALUES (?, ?, ?, ?, ?, ?)",
             [
                 $data['title'],
                 $data['message'],
@@ -31,12 +31,10 @@ class FeedbackRepository
 
     public function findFiltered(array $filters, int $limit, int $offset, string $sort): array
     {
-
         $baseSql = "FROM feedbacks f
                 LEFT JOIN categories c ON f.category_id = c.id
                 LEFT JOIN feedback_votes v ON v.feedback_id = f.id
                 WHERE 1=1";
-
         $params = [];
 
         if (!empty($filters['status'])) {
@@ -45,7 +43,7 @@ class FeedbackRepository
         }
 
         if (!empty($filters['category'])) {
-            $baseSql .= " AND f.category_id = UUID_TO_BIN(?)";
+            $baseSql .= " AND f.category_id = ?";
             $params[] = $filters['category'];
         }
 
@@ -57,9 +55,8 @@ class FeedbackRepository
         $countSql = "SELECT COUNT(DISTINCT f.id) " . $baseSql;
         $total = (int)$this->db->fetchColumn($countSql, $params);
 
-
         $dataSql = "SELECT 
-                    BIN_TO_UUID(f.id) AS id,
+                    f.id AS id,
                     f.title,
                     c.name AS cat,
                     f.status,
@@ -67,7 +64,7 @@ class FeedbackRepository
                     f.allow_public,
                     f.created_at " . $baseSql;
 
-        $dataSql .= " GROUP BY f.id";
+        $dataSql .= " GROUP BY f.id, c.name";
 
         $sortMap = [
             'recent' => 'f.created_at DESC',
@@ -79,25 +76,18 @@ class FeedbackRepository
 
         $dataSql .= " LIMIT ? OFFSET ?";
         $dataParams = array_merge($params, [$limit, $offset]);
-
         $feedbacks = $this->db->fetchAll($dataSql, $dataParams);
 
-        return [
-            'feedbacks' => $feedbacks,
-            'total' => $total
-        ];
+        return ['feedbacks' => $feedbacks, 'total' => $total];
     }
 
     public function updateStatus(string $id, string $status): bool
     {
         $sql = "
         UPDATE feedbacks 
-        SET 
-            status = ?,
-            resolved_at = CASE WHEN ? = 'resolved' THEN NOW() ELSE NULL END
-        WHERE 
-            id = UUID_TO_BIN(?)
-    ";
+            SET status = ?, resolved_at = CASE WHEN ? = 'resolved' THEN NOW() ELSE NULL END
+            WHERE id = ?
+        ";
 
         return $this->db->query($sql, [$status, $status, $id]);
     }
@@ -108,8 +98,7 @@ class FeedbackRepository
             return 0;
         }
 
-        $placeholders = implode(',', array_fill(0, count($uuids), 'UUID_TO_BIN(?)'));
-
+        $placeholders = implode(',', array_fill(0, count($uuids), '?'));
         $sql = "DELETE FROM feedbacks WHERE id IN ($placeholders)";
 
         return $this->db->query($sql, $uuids);
@@ -118,7 +107,7 @@ class FeedbackRepository
     public function findPublicFeedbackById(string $uuid)
     {
         $sql = "SELECT 
-        BIN_TO_UUID(f.id) AS id,
+        f.id AS id,
         f.title,
         f.message AS description,
         f.status,
@@ -148,7 +137,7 @@ class FeedbackRepository
         FROM feedbacks f
         JOIN categories c ON f.category_id = c.id
         LEFT JOIN feedback_responses fr ON fr.feedback_id = f.id
-        WHERE f.id = UUID_TO_BIN(?)
+        WHERE f.id = ?
         AND f.allow_public = 1
         AND f.is_public = 1";
 
@@ -158,7 +147,7 @@ class FeedbackRepository
     public function findAdminById(string $uuid): ?array
     {
         $sql = "SELECT 
-                BIN_TO_UUID(f.id) AS id,
+                f.id AS id,
                 f.title,
                 f.message AS description,
                 f.status,
@@ -191,7 +180,7 @@ class FeedbackRepository
             FROM feedbacks f
             JOIN categories c ON f.category_id = c.id
             LEFT JOIN feedback_responses fr ON fr.feedback_id = f.id
-            WHERE f.id = UUID_TO_BIN(?)";
+            WHERE f.id = ?";
 
         return $this->db->fetchOne($sql, [$uuid]);
     }
@@ -199,7 +188,7 @@ class FeedbackRepository
     public function updatePublicVisibility(string $id, bool $isPublic): bool
     {
         return $this->db->query(
-            "UPDATE feedbacks SET is_public = ? WHERE id = UUID_TO_BIN(?)",
+            "UPDATE feedbacks SET is_public = ? WHERE id = ?",
             [$isPublic ? 1 : 0, $id]
         );
     }
@@ -210,22 +199,21 @@ class FeedbackRepository
         $this->db->beginTransaction();
 
         $exists = $this->db->fetchOne(
-            "SELECT BIN_TO_UUID(id) as id FROM feedback_responses WHERE feedback_id = UUID_TO_BIN(?)",
+            "SELECT id as id FROM feedback_responses WHERE feedback_id = ?",
             [$feedbackId]
         );
 
         if ($exists) {
-
             $result = $this->db->query(
                 "UPDATE feedback_responses 
                  SET response = ?, last_updated = NOW() 
-                 WHERE feedback_id = UUID_TO_BIN(?)",
+                 WHERE feedback_id = ?",
                 [$content, $feedbackId]
             );
         } else {
             $result = $this->db->query(
                 "INSERT INTO feedback_responses (feedback_id, response, last_updated)
-                 VALUES (UUID_TO_BIN(?), ?, NOW())",
+                 VALUES (?, ?, NOW())",
                 [$feedbackId, $content]
             );
         }
@@ -251,7 +239,7 @@ class FeedbackRepository
         }
 
         if (!empty($filters['category'])) {
-            $baseSql .= " AND c.id = UUID_TO_BIN(?)";
+            $baseSql .= " AND c.id = ?";
             $params[] = $filters['category'];
         }
 
@@ -268,7 +256,7 @@ class FeedbackRepository
 
 
         $dataSql = "SELECT
-                    BIN_TO_UUID(f.id) AS id,
+                    f.id AS id,
                     f.title,
                     f.message,
                     f.status,

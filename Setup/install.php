@@ -62,7 +62,7 @@ try {
 
     $db->query("
         CREATE TABLE IF NOT EXISTS categories (
-            id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+            id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
             name VARCHAR(255) NOT NULL UNIQUE,
             color VARCHAR(20) NOT NULL UNIQUE
         )
@@ -70,10 +70,10 @@ try {
 
     $db->query("
         CREATE TABLE IF NOT EXISTS feedbacks (
-            id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+            id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
             title VARCHAR(80) NOT NULL,
             message VARCHAR(600) NOT NULL,
-            category_id BINARY(16) NOT NULL,
+            category_id VARCHAR(36) NOT NULL,
             is_public TINYINT(1) NOT NULL DEFAULT 0,
             allow_public TINYINT(1) NOT NULL DEFAULT 0,
             rating TINYINT UNSIGNED NOT NULL DEFAULT 0,
@@ -88,7 +88,7 @@ try {
     $db->query("
         CREATE TABLE IF NOT EXISTS feedback_votes (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            feedback_id BINARY(16) NOT NULL,
+            feedback_id VARCHAR(36) NOT NULL,
             cookie_hash CHAR(64) NOT NULL,
             ip_address VARCHAR(45) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -101,7 +101,7 @@ try {
     $db->query("
         CREATE TABLE IF NOT EXISTS feedback_responses (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            feedback_id BINARY(16) NOT NULL,
+            feedback_id VARCHAR(36) NOT NULL,
             response TEXT NOT NULL,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             UNIQUE KEY `uniq_feedback_id` (`feedback_id`),

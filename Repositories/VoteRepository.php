@@ -17,7 +17,7 @@ class VoteRepository
     {
         $sql = "
             INSERT INTO feedback_votes (feedback_id, cookie_hash, ip_address)
-            VALUES (UUID_TO_BIN(?), ?, ?)
+            VALUES (?, ?, ?)
         ";
         return $this->db->query($sql, [$feedbackId, $cookieHash, $ip]);
     }
@@ -25,17 +25,19 @@ class VoteRepository
     public function countVotes(string $feedbackId): int
     {
         $sql = "
-            SELECT COUNT(*) FROM feedback_votes
-            WHERE feedback_id = UUID_TO_BIN(?)
+            SELECT COUNT(*) 
+            FROM feedback_votes WHERE feedback_id = ?
         ";
         return (int) $this->db->query($sql, [$feedbackId]);
     }
 
     public function countActiveUsers(int $days = 30): int
     {
-        $sql = "SELECT COUNT(DISTINCT ip_address) 
-                FROM feedback_votes 
-                WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)";
+        $sql = "
+            SELECT COUNT(DISTINCT ip_address)
+            FROM feedback_votes
+            WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
+        ";
         return (int) $this->db->fetchColumn($sql, [$days]);
     }
 }

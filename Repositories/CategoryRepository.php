@@ -21,7 +21,7 @@ class CategoryRepository
         );
 
         $uuid = $this->db->fetchColumn(
-            "SELECT BIN_TO_UUID(id) AS id 
+            "SELECT id 
              FROM categories 
              WHERE name = ? AND color = ? 
              ORDER BY id DESC 
@@ -50,17 +50,13 @@ class CategoryRepository
 
     public function findAll(array $columns = ['*']): array
     {
-        $cols = array_map(
-            fn($col) => $col === 'id' ? 'BIN_TO_UUID(id) AS id' : $col,
-            $columns
-        );
-        $colsString = implode(', ', $cols);
+        $colsString = implode(', ', $columns);
         return $this->db->fetchAll("SELECT $colsString FROM categories ORDER BY name ASC");
     }
 
     public function deleteById(string $id): bool
     {
-        $sql = "DELETE FROM categories WHERE id = UUID_TO_BIN(?)";
+        $sql = "DELETE FROM categories WHERE id = ?";
         return $this->db->query($sql, [$id]);
     }
 
@@ -68,7 +64,7 @@ class CategoryRepository
     {
         return $this->db->fetchAll(
             "SELECT 
-                BIN_TO_UUID(c.id) AS id,
+                c.id,
                 c.name,
                 c.color,
                 COUNT(f.id) AS feedbacks
