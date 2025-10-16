@@ -26,7 +26,7 @@ class FeedbackController
             'title' => trim($_POST['title']),
             'message' => trim($_POST['message']),
             'category_id' => $_POST['category'],
-            'allow_public' => isset($_POST['allow_public']) ? 1 : 0,
+            'allow_public' => (isset($_POST['allow_public']) && $_POST['allow_public'] === '1') ? 1 : 0,
             'contact_details' => trim($_POST['contact'] ?? null),
             'rating' => trim($_POST['rating'] ?? 0),
         ];
