@@ -112,7 +112,10 @@ class FeedbackRepository
 
         $sql = "DELETE FROM feedbacks WHERE id IN ($placeholders)";
 
-        return $this->db->query($sql, $uuids);
+        $this->db->query($sql, $uuids);
+        $affectedRows = $this->db->getAffectedRows();
+
+        return $affectedRows;
     }
 
     public function findPublicFeedbackById(string $uuid)
