@@ -248,7 +248,18 @@ include __DIR__ . '/layout.php';
             submitBtn.disabled = true;
 
             try {
-                const formData = new FormData(form);
+                const formData = new FormData();
+                formData.append('title', titleInput.value);
+                formData.append('message', messageInput.value);
+                formData.append('category', categorySelect.value);
+                formData.append('contact', document.getElementById('contact').value);
+
+                const rating = form.querySelector('input[name="rating"]:checked');
+                formData.append('rating', rating ? rating.value : '0');
+
+                const allowPublicCheckbox = document.getElementById('allowPublic');
+                formData.append('allow_public', allowPublicCheckbox.checked ? '1' : '0');
+
                 const response = await fetch('/submit-feedback', {
                     method: form.method,
                     body: formData,
