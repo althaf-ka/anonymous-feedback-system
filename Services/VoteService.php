@@ -4,7 +4,7 @@ namespace Services;
 
 use Repositories\VoteRepository;
 use Exception;
-use mysqli_sql_exception; // Import the MySQLi exception class
+use mysqli_sql_exception;
 
 class VoteService
 {
@@ -13,10 +13,11 @@ class VoteService
     public function castVote(string $feedbackId, string $cookieValue, string $ipAddress): int
     {
         $cookieHash = hash('sha256', $cookieValue);
+        $ipHash = md5($ipAddress);
 
         try {
 
-            $this->voteRepo->addVote($feedbackId, $cookieHash, $ipAddress);
+            $this->voteRepo->addVote($feedbackId, $cookieHash, $ipHash);
         } catch (mysqli_sql_exception $e) {
 
             // Error code 1062 is "Duplicate entry" for a UNIQUE key.
