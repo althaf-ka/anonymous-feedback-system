@@ -20,7 +20,7 @@
 
             <div class="header-actions">
                 <?php if (empty($isAdmin)): ?>
-                    <a href="/submit-feedback" class="btn btn-primary header-btn">Submit Feedback</a>
+                    <a href="/admin/login" class="btn btn-primary header-btn">Admin</a>
                 <?php endif; ?>
             </div>
         </div>

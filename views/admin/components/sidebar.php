@@ -6,7 +6,9 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
             </svg>
-            <h2 class="header-title">Admin Panel</h2>
+            <a href="/admin/dashboard">
+                <h2 class="header-title">Admin Panel</h2>
+            </a>
         </div>
         <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Close sidebar">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
