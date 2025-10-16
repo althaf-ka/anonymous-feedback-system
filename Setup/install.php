@@ -90,7 +90,7 @@ try {
             id INT AUTO_INCREMENT PRIMARY KEY,
             feedback_id BINARY(16) NOT NULL,
             cookie_hash CHAR(64) NOT NULL,
-            ip_address VARCHAR(45) NOT NULL,
+            ip_address CHAR(32) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(feedback_id, cookie_hash),
             UNIQUE(feedback_id, ip_address),

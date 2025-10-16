@@ -179,7 +179,7 @@ class FeedbackComponent
                                 </div>
                                 <div class="detail-item">
                                     <span class="detail-label">Category</span>
-                                    <span class="detail-value"><?= htmlspecialchars($category) ?></span>
+                                    <span class="detail-value text-capitalize"><?= htmlspecialchars($category) ?></span>
                                 </div>
 
                                 <?php if ($this->isAdmin): ?>
